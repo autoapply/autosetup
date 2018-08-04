@@ -1,0 +1,10 @@
+.*
+!.gitignore
+!.eslintrc.json
+!.travis.yml
+
+node_modules/
+package-lock.json
+
+*.log
+*.bak
