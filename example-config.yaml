@@ -1,0 +1,32 @@
+# optional, the secret providers from where to fetch secrets
+secretProviders:
+  azureKeyVault1:
+    type: azure-key-vault
+    subscription: my-azure-subscription-id
+    keyVault: keyvault-1
+secrets:
+  # optional, the SSH key used to access the repository
+  ssh:
+    type: ssh-key
+    source:
+      provider: azureKeyVault1
+      name: autoapply-ssh
+  # optional, the dockercfg that will be used to access the docker registry
+  dockercfg:
+    type: dockercfg
+    source:
+      provider: azureKeyVault1
+      name: dockercfg-1
+  # optional, the yaml-crypt key to decrypt the secret files
+  yamlCrypt:
+    type: raw
+    source:
+      provider: azureKeyVault1
+      name: yaml-crypt-1
+deployment:
+  # optional, the Kubernetes namespace where the autoapply objects will be created
+  namespace: autoapply-test
+  # required, the repository from where to download Kubernetes object files
+  repository: 'git@github.com:pascalgn/autoapply.git'
+  # optional, the path within the repository
+  path: docs/examples/nginx.yaml
