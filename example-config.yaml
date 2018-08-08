@@ -6,11 +6,19 @@ secretProviders:
     keyVault: keyvault-1
 secrets:
   # optional, the SSH key used to access the repository
+  # can be generated using ssh-keygen
   ssh:
     type: ssh-key
     source:
       provider: azureKeyVault1
       name: autoapply-ssh
+  # optional, the SSH public host key used to access the repository
+  # can be generated using ssh-keyscan
+  knownHosts:
+    type: raw
+    source:
+      provider: azureKeyVault1
+      name: autoapply-knownHosts
   # optional, the dockercfg that will be used to access the docker registry
   dockercfg:
     type: dockercfg

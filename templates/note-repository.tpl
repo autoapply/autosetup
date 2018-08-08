@@ -5,6 +5,6 @@
 #   apply the files it finds to the Kubernetes cluster.
 #
 #   Repository URL: <%= ctx.deployment.repository %>
-<% if (ctx.deployment.path !== ".") { -%>
-#   Path: <%= ctx.deployment.path %>
+<% if (ctx.deployment.path.length > 1 || ctx.deployment.path[0] !== ".") { -%>
+#   Path: <%= ctx.deployment.path.join(" ") %>
 <% } -%>

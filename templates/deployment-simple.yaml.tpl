@@ -4,6 +4,8 @@ metadata:
   name: autoapply
   namespace: '<%= ctx.deployment.namespace %>'
 spec:
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -44,11 +46,18 @@ spec:
                 loop:
                   sleep: <%= ctx.deployment.sleep %>
                   commands:
-                    - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository %>
-<% if (ctx.secrets.yamlCrypt) { -%>
-                    - yaml-crypt --key ~/.yaml-crypt/key --dir --rm --decrypt '<%= ctx.deployment.path %>'
+                    - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository %> '.'
+<% for (const path of ctx.deployment.path) { -%>
+<%   if (ctx.secrets.yamlCrypt) { -%>
+                    - yaml-crypt --key ~/.yaml-crypt/key --dir --rm --decrypt '<%= path %>'
+<%   } -%>
+                    - kubectl apply -f '<%= path %>'
 <% } -%>
-                    - kubectl apply -f '<%= ctx.deployment.path %>'
+<% if (ctx.deployment.tolerations) { -%>
+      tolerations:
+        - effect: NoExecute
+          operator: Exists
+<% } -%>
 <% if (ctx.secrets.dockercfg) { -%>
       imagePullSecrets:
         - name: <%= ctx.secrets.dockercfg.kubernetesName %>
