@@ -5,7 +5,7 @@ Quickly set up [autoapply](https://github.com/pascalgn/autoapply) in a Kubernete
 ## Usage
 
 ```bash
-$ yarn global add @autoapply/autosetup
+$ yarn global add autosetup
 $ vi config.yaml
 # edit config.yaml as required...
 $ autosetup config.yaml output.yaml
