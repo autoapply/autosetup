@@ -38,10 +38,6 @@ spec:
 <%   if (ctx.secrets.knownHosts) { -%>
                     - echo "${<%= ctx.secrets.knownHosts.envName %>}" > ~/.ssh/known_hosts
 <%   } -%>
-<%   if (ctx.secrets.yamlCrypt) { -%>
-                    - mkdir -p ~/.yaml-crypt && chmod 700 ~/.yaml-crypt
-                    - echo "${<%= ctx.secrets.yamlCrypt.envName %>}" > ~/.yaml-crypt/key && chmod 600 ~/.yaml-crypt/key
-<%   } -%>
 <% } -%>
                 loop:
                   sleep: <%= ctx.deployment.sleep %>
@@ -49,7 +45,7 @@ spec:
                     - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository %> '.'
 <% for (const path of ctx.deployment.path) { -%>
 <%   if (ctx.secrets.yamlCrypt) { -%>
-                    - yaml-crypt --key ~/.yaml-crypt/key --dir --rm --decrypt '<%= path %>'
+                    - yaml-crypt --key "env:<%= ctx.secrets.yamlCrypt.envName %>" --dir --decrypt '<%= path %>'
 <%   } -%>
                     - kubectl apply -f '<%= path %>'
 <% } -%>

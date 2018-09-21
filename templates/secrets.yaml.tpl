@@ -1,4 +1,4 @@
-<% if (ctx.secrets) { -%>
+<% if (ctx.secrets && Object.values(ctx.secrets).length > 0) { -%>
 <%   Object.values(ctx.secrets).forEach(secret => { -%>
 apiVersion: v1
 kind: Secret
