@@ -1,6 +1,6 @@
 {
   "name": "autosetup",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
@@ -25,8 +25,7 @@
     "winston": "^3.1.0"
   },
   "scripts": {
-    "lint": "eslint .",
-    "upload": "yarn lint && yarn publish"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "ejs-lint": "^0.3.0",
