@@ -45,7 +45,7 @@ spec:
                     - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository %> '.'
 <% for (const path of ctx.deployment.path) { -%>
 <%   if (ctx.secrets.yamlCrypt) { -%>
-                    - yaml-crypt --key "env:<%= ctx.secrets.yamlCrypt.envName %>" --dir --decrypt '<%= path %>'
+                    - yaml-crypt -k "env:<%= ctx.secrets.yamlCrypt.envName %>" --dir --decrypt '<%= path %>'
 <%   } -%>
                     - kubectl apply -f '<%= path %>'
 <% } -%>
