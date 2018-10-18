@@ -10,7 +10,12 @@
     "url": "https://github.com/pascalgn/autosetup.git"
   },
   "bin": {
-    "autosetup": "./bin/autosetup.js"
+    "autosetup": "./dist/autosetup.js"
+  },
+  "scripts": {
+    "lint": "eslint src/",
+    "build": "babel src/ -d dist/",
+    "prepublish": "yarn run build"
   },
   "dependencies": {
     "argparse": "^1.0.9",
@@ -24,11 +29,13 @@
     "tmp-promise": "^1.0.5",
     "winston": "^3.1.0"
   },
-  "scripts": {
-    "lint": "eslint ."
-  },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.0.1",
+    "babel-preset-flow": "^6.23.0",
     "ejs-lint": "^0.3.0",
-    "eslint": "^5.6.0"
+    "eslint": "^5.6.0",
+    "eslint-plugin-flowtype": "^3.0.0",
+    "flow-bin": "^0.83.0"
   }
 }
