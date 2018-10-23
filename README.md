@@ -25,6 +25,10 @@ deployment:
 
 For more details, see [example-config.yaml](example-config.yaml).
 
+## Docker
+
+To run with Docker, use `docker run -it autoapply/autosetup --help`
+
 ## License
 
 Autosetup is licensed under the [MIT License](LICENSE)

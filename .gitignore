@@ -1,5 +1,6 @@
 .*
 !.babelrc
+!.dockerignore
 !.eslintrc.json
 !.flowconfig
 !.gitignore
