@@ -1,4 +1,4 @@
-const fse = require("fs-extra");
+// @flow
 
 require("pkginfo")(module);
 
@@ -8,40 +8,69 @@ const kubernetes = require("./kubernetes");
 const utils = require("./utils");
 const { logger } = require("./utils");
 
-async function setup(config, options) {
+import type { Config } from "./config";
+import type { Options } from "./cli";
+
+export type Context = {
+  version: string,
+  output: string,
+  notes: Array<String>,
+  model: string,
+  secrets: {
+    [string]: {
+      type: string,
+      value: string,
+      valueBase64: string,
+      kubernetesName?: string,
+      kubernetesType?: string,
+      kubernetesEnvName?: string
+    }
+  },
+  deployment: {
+    namespace: string,
+    tolerations: boolean,
+    image: string,
+    git: {
+      args: string
+    },
+    repository: {
+      url: string,
+      urlType: "ssh" | "http" | "https" | "unknown"
+    },
+    path: [string],
+    sleep: number
+  }
+};
+
+async function setup(config: Config, options: Options): Promise<string> {
   if (config.api !== "v1") {
     throw new Error("Unknown API version: " + config.api);
   }
 
   if (config.deployment.template !== "simple") {
     throw new Error(
-      "Unknown deployment template: " + context.deployment.template
+      "Unknown deployment template: " + config.deployment.template
     );
   }
 
-  const { output } = options;
-  if (output !== "-") {
-    const exists = await fse.exists(output);
-    if (exists) {
-      throw new Error("Output file exists: " + output);
-    }
-  }
-
-  const context = {
-    pkginfo: {
-      version: module.exports.version
-    },
+  const context: Context = {
+    version: module.exports.version,
+    output: options.output,
     notes: [],
     model: "",
-    options,
-    secrets: {},
-    secretProviders: config.secretProviders,
-    deployment: config.deployment
+    deployment: {
+      namespace: config.deployment.namespace,
+      tolerations: config.deployment.tolerations,
+      image: config.deployment.image,
+      git: config.deployment.git,
+      repository: getRepositoryContext(config),
+      path: Array.isArray(config.deployment.path)
+        ? config.deployment.path
+        : [config.deployment.path],
+      sleep: config.deployment.sleep
+    },
+    secrets: await getSecretsContext(config)
   };
-
-  if (!Array.isArray(context.deployment.path)) {
-    context.deployment.path = [context.deployment.path];
-  }
 
   if (context.deployment.path.length < 1) {
     throw new Error("Empty deployment.path array!");
@@ -51,10 +80,7 @@ async function setup(config, options) {
   context.notes.push(await utils.template("note-kubernetes.tpl", context));
   context.notes.push(await utils.template("note-repository.tpl", context));
 
-  configureRepository(context);
-  await configureSecrets(config, context);
-
-  if (context.deployment.git.urlType === "ssh") {
+  if (context.deployment.repository.urlType === "ssh") {
     if (!context.secrets.ssh) {
       logger.warn("SSH repository URL, but secrets.ssh missing!");
     }
@@ -72,90 +98,87 @@ async function setup(config, options) {
     );
   }
 
-  const str = joinAll(context);
-  if (output === "-") {
-    logger.info("All templates successfully generated!");
-    console.log(str);
-  } else {
-    const fd = await fse.open(output, "wx");
-    try {
-      await fse.write(fd, str + "\n");
-    } finally {
-      await fse.close(fd);
-    }
-    logger.info("File has been written successfully: %s", output);
-  }
+  return joinAll(context);
 }
 
-function configureRepository(context) {
-  if (!context.deployment.repository) {
+function getRepositoryContext(config) {
+  if (!config.deployment.repository) {
     throw new Error("deployment.repository missing!");
   }
-  const repository = context.deployment.repository.trim();
+  const url = config.deployment.repository.trim();
   // URL type:
-  const urlMatch = repository.match(
+  const urlMatch = url.match(
     /((git|ssh|http(s)?)|([\w-]+@[\w.-]+))(:(\/\/)?)([\w.@:/\-~]+)(\.git)?(\/)?/
   );
+  let urlType;
   if (urlMatch) {
     if (urlMatch[2]) {
-      context.deployment.git.urlType = urlMatch[2];
+      urlType = urlMatch[2];
     } else {
-      context.deployment.git.urlType = "ssh";
+      urlType = "ssh";
     }
+  } else {
+    urlType = "unknown";
   }
+  const repository = {
+    url,
+    urlType
+  };
   // github/gitlab info:
-  const hostMatch = repository.match(
+  const hostMatch = url.match(
     /^(?:git@|https:\/\/)(github|gitlab).com(?:\/|:)(.+)$/
   );
   if (hostMatch) {
-    context.deployment[hostMatch[1]] = {
+    repository[hostMatch[1]] = {
       path: hostMatch[2].replace(/\.git$/, "")
     };
   }
+  return repository;
 }
 
-async function configureSecrets(config, context) {
-  for (const key in config.secrets) {
-    if (config.secrets.hasOwnProperty(key)) {
-      const secret = config.secrets[key];
-      if (!["ssh-key", "raw", "dockercfg"].includes(secret.type)) {
-        throw new Error("Unknown secret.type in secret: " + key);
-      }
-      if (secret.source) {
-        if (secret.value) {
-          throw new Error("Both secret.source and secret.value given: " + key);
-        }
-        secret.value = await loadSecretValue(context, secret);
-      }
-      if (!secret.value && secret.type === "ssh-key") {
-        const sshKey = await ssh.generateKey(secret.keySize);
-        logger.debug("Generated public SSH key: %s", sshKey.publicKey);
-        secret.value = sshKey.privateKey;
-      }
-      if (!secret.value) {
-        throw new Error("Missing secret.value: " + key);
-      }
-      context.secrets[key] = secret;
+async function getSecretsContext(config) {
+  const secrets = {};
+  for (const name of Object.keys(config.secrets)) {
+    const secret = config.secrets[name];
+    let value;
+    if (secret.source) {
+      value = await loadSecretValue(config, secret);
+    } else if (secret.value) {
+      value = secret.value;
+    } else if (secret.type === "ssh-key") {
+      const sshKey = await ssh.generateKey(secret.keySize);
+      logger.debug("Generated public SSH key: %s", sshKey.publicKey);
+      value = sshKey.privateKey;
+    } else {
+      throw new Error("Invalid secret: " + name);
     }
+    secrets[name] = {
+      type: secret.type,
+      value,
+      valueBase64: Buffer.from(value).toString("base64")
+    };
   }
+  return secrets;
 }
 
-async function loadSecretValue(context, secret) {
-  const { source } = secret;
-  const provider = context.secretProviders[source.provider];
+async function loadSecretValue(config, secret) {
+  if (!secret.source) {
+    throw new Error("No provider given!");
+  }
+  const provider = config.secretProviders[secret.source.provider];
   if (!provider) {
-    throw new Error("No secretProvider found: " + source.provider);
+    throw new Error("No secretProvider found: " + secret.source.provider);
   }
   if (provider.type === "azure-key-vault") {
     logger.info(
       "Loading secret from %s: %s...",
       provider.keyVault,
-      source.name
+      secret.source.name
     );
     return await azure.loadSecret(
       provider.subscription,
       provider.keyVault,
-      source.name
+      secret.source.name
     );
   } else {
     throw new Error("Unknown provider type: " + provider.type);

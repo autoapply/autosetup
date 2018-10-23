@@ -1,19 +1,20 @@
 {
   "name": "autosetup",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
-  "homepage": "https://github.com/pascalgn/autosetup",
+  "homepage": "https://github.com/autoapply/autosetup",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pascalgn/autosetup.git"
+    "url": "https://github.com/autoapply/autosetup.git"
   },
   "bin": {
     "autosetup": "./dist/autosetup.js"
   },
   "scripts": {
-    "lint": "eslint src/",
+    "lint": "eslint src/ test/",
+    "test": "mocha --timeout=8000 --check-leaks --require babel-core/register test/",
     "build": "babel src/ -d dist/",
     "prepublish": "yarn run build"
   },
@@ -33,9 +34,11 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
     "babel-preset-flow": "^6.23.0",
+    "chai": "^4.2.0",
     "ejs-lint": "^0.3.0",
     "eslint": "^5.6.0",
     "eslint-plugin-flowtype": "^3.0.0",
-    "flow-bin": "^0.83.0"
+    "flow-bin": "^0.83.0",
+    "mocha": "^5.2.0"
   }
 }

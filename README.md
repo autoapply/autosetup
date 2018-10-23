@@ -1,6 +1,6 @@
 # autosetup
 
-Quickly set up [autoapply](https://github.com/pascalgn/autoapply) in a Kubernetes cluster.
+Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernetes cluster.
 
 ## Usage
 

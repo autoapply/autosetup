@@ -1,9 +1,13 @@
+// @flow
+
 const path = require("path");
 
 const winston = require("winston");
 const spawn = require("child-process-promise").spawn;
 const fse = require("fs-extra");
 const ejs = require("ejs");
+
+import type { Context } from "./setup";
 
 const templatesPath = path.resolve(__dirname, "../templates");
 
@@ -19,12 +23,29 @@ const logger = winston.createLogger({
   ]
 });
 
-async function template(name, context, args = {}) {
+async function template(name: string, context: Context, args: any = {}) {
   const content = await fse.readFile(path.resolve(templatesPath, name), "utf8");
-  return ejs.render(content, Object.assign({ ctx: context }, args));
+  function proxy(obj) {
+    const handler = {};
+    handler.get = (target, name) => {
+      if (name in target) {
+        const value = target[name];
+        if (value !== null) {
+          if (typeof value === "object") {
+            return new Proxy(value, handler);
+          } else if (typeof value !== "undefined") {
+            return value;
+          }
+        }
+      }
+      throw new Error("Undefined value: " + name);
+    };
+    return new Proxy(obj, handler);
+  }
+  return ejs.render(content, Object.assign({ ctx: proxy(context) }, args));
 }
 
-async function run(cmd, args) {
+async function run(cmd: string, args: Array<string>) {
   const cmdStr = [cmd, ...args].join(" ");
   logger.debug("Executing command: %s", cmdStr);
   const options = { capture: ["stdout", "stderr"] };

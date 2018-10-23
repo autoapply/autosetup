@@ -6,14 +6,14 @@
 #
 #   Please make sure the key has access to this repository:
 #
-#   <%= ctx.deployment.repository %>
-<% if (ctx.deployment.github) { -%>
+#   <%= ctx.deployment.repository.url %>
+<% if (ctx.deployment.repository.github) { -%>
 #
 #   For this repository, you can manage deploy keys here:
-#   https://github.com/<%= ctx.deployment.github.path %>/settings/keys
-<% } else if (ctx.deployment.gitlab) { -%>
+#   https://github.com/<%= ctx.deployment.repository.github.path %>/settings/keys
+<% } else if (ctx.deployment.repository.gitlab) { -%>
 #
 #   For this repository, you can manage deploy keys here:
-#   https://gitlab.com/<%= ctx.deployment.gitlab.path %>/settings/repository
+#   https://gitlab.com/<%= ctx.deployment.repository.gitlab.path %>/settings/repository
 #   (under section "Deploy Keys")
 <% } -%>

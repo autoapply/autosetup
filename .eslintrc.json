@@ -11,10 +11,11 @@
   "plugins": ["flowtype"],
   "extends": ["eslint:recommended", "plugin:flowtype/recommended"],
   "rules": {
-    "max-len": ["error", 100],
+    "max-len": ["error", 80],
     "semi": "error",
     "no-tabs": "error",
-    "no-console": "off",
-    "no-constant-condition": "off"
+    "no-console": "error",
+    "no-constant-condition": "off",
+    "require-await": "error"
   }
 }

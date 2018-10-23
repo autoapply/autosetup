@@ -1,6 +1,12 @@
+// @flow
+
 const utils = require("./utils");
 
-async function loadSecret(subscription, keyVault, secret) {
+async function loadSecret(
+  subscription: string,
+  keyVault: string,
+  secret: string
+) {
   let result;
   try {
     result = await utils.run("az", [

@@ -1,3 +1,5 @@
+// @flow
+
 const path = require("path");
 
 const tmp = require("tmp-promise");
@@ -5,7 +7,7 @@ const fse = require("fs-extra");
 
 const utils = require("./utils");
 
-async function generateKey(keySize) {
+async function generateKey(keySize?: string | number) {
   keySize = keySize || 4096;
   const dir = await tmp.dir({ unsafeCleanup: true });
   try {
@@ -13,7 +15,7 @@ async function generateKey(keySize) {
     const publicKeyFile = path.resolve(dir.path, "id_rsa.pub");
     await utils.run("ssh-keygen", [
       "-b",
-      keySize,
+      keySize.toString(),
       "-N",
       "",
       "-C",
@@ -34,7 +36,7 @@ async function readFile(path) {
   return content.trim();
 }
 
-async function extractPublicKey(key) {
+async function extractPublicKey(key: string) {
   const dir = await tmp.dir({ unsafeCleanup: true });
   try {
     const keyFile = path.resolve(dir.path, "id_rsa");
@@ -47,7 +49,7 @@ async function extractPublicKey(key) {
   }
 }
 
-async function fetchPublicHostKey(host) {
+async function fetchPublicHostKey(host: string) {
   await utils.run("ssh-keyscan", [host]);
 }
 

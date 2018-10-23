@@ -7,7 +7,7 @@ metadata:
   namespace: '<%= ctx.deployment.namespace %>'
 type: <%= secret.kubernetesType %>
 data:
-  <%= secret.envName %>: '<%= secret.valueBase64 %>'
+  <%= secret.kubernetesEnvName %>: '<%= secret.valueBase64 %>'
 ---
 <%   }); -%>
 <% } -%>

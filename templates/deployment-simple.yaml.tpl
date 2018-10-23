@@ -26,26 +26,26 @@ spec:
           env:
             - name: AUTOAPPLY_CONFIG
               value: |
-<% if (ctx.secrets.ssh || ctx.secrets.knownHosts || ctx.secrets.yamlCrypt) { -%>
+<% if (ctx.secrets.hasOwnProperty("ssh") || ctx.secrets.hasOwnProperty("knownHosts")) { -%>
                 init:
                   commands:
-<%   if (ctx.secrets.ssh || ctx.secrets.knownHosts) { -%>
+<%   if (ctx.secrets.hasOwnProperty("ssh") || ctx.secrets.hasOwnProperty("knownHosts")) { -%>
                     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
 <%   } -%>
-<%   if (ctx.secrets.ssh) { -%>
-                    - echo "${<%= ctx.secrets.ssh.envName %>}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+<%   if (ctx.secrets.hasOwnProperty("ssh")) { -%>
+                    - echo "${<%= ctx.secrets.ssh.kubernetesEnvName %>}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 <%   } -%>
-<%   if (ctx.secrets.knownHosts) { -%>
-                    - echo "${<%= ctx.secrets.knownHosts.envName %>}" > ~/.ssh/known_hosts
+<%   if (ctx.secrets.hasOwnProperty("knownHosts")) { -%>
+                    - echo "${<%= ctx.secrets.knownHosts.kubernetesEnvName %>}" > ~/.ssh/known_hosts
 <%   } -%>
 <% } -%>
                 loop:
                   sleep: <%= ctx.deployment.sleep %>
                   commands:
-                    - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository %> '.'
+                    - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository.url %> '.'
 <% for (const path of ctx.deployment.path) { -%>
-<%   if (ctx.secrets.yamlCrypt) { -%>
-                    - yaml-crypt -k "env:<%= ctx.secrets.yamlCrypt.envName %>" --dir --decrypt '<%= path %>'
+<%   if (ctx.secrets.hasOwnProperty("yamlCrypt")) { -%>
+                    - yaml-crypt -k "env:<%= ctx.secrets.yamlCrypt.kubernetesEnvName %>" --dir --decrypt '<%= path %>'
 <%   } -%>
                     - kubectl apply -f '<%= path %>'
 <% } -%>
@@ -54,7 +54,7 @@ spec:
         - effect: NoExecute
           operator: Exists
 <% } -%>
-<% if (ctx.secrets.dockercfg) { -%>
+<% if (ctx.secrets.hasOwnProperty("dockercfg")) { -%>
       imagePullSecrets:
         - name: <%= ctx.secrets.dockercfg.kubernetesName %>
 <% } -%>

@@ -1,6 +1,10 @@
+// @flow
+
 const { template } = require("./utils");
 
-async function buildSimpleModel(context) {
+import type { Context } from "./setup";
+
+async function buildSimpleModel(context: Context) {
   processSecrets(context);
   return join([
     await template("namespace.yaml.tpl", context),
@@ -11,26 +15,23 @@ async function buildSimpleModel(context) {
 }
 
 function processSecrets(context) {
-  for (const key in context.secrets) {
-    if (context.secrets.hasOwnProperty(key)) {
-      const secret = context.secrets[key];
-      if (!secret.value) {
-        throw new Error(`Missing secret.value: ${key}`);
-      }
-      if (!secret.kubernetesName) {
-        secret.kubernetesName = `autoapply-${key.toLowerCase()}-secret`;
-      }
-      if (!secret.envName) {
-        secret.envName = key.replace(/-/g, "_");
-      }
-      if (!secret.kubernetesType) {
-        secret.kubernetesType =
-          secret.type === "dockercfg" ? "kubernetes.io/dockercfg" : "Opaque";
-      }
-      if (secret.kubernetesType === "kubernetes.io/dockercfg") {
-        secret.envName = ".dockercfg";
-      }
-      secret.valueBase64 = Buffer.from(secret.value).toString("base64");
+  for (const name of Object.keys(context.secrets)) {
+    const secret = context.secrets[name];
+    if (!secret.value) {
+      throw new Error(`Missing secret.value: ${name}`);
+    }
+    if (!secret.kubernetesName) {
+      secret.kubernetesName = `autoapply-${name.toLowerCase()}-secret`;
+    }
+    if (!secret.kubernetesEnvName) {
+      secret.kubernetesEnvName = name.replace(/-/g, "_");
+    }
+    if (!secret.kubernetesType) {
+      secret.kubernetesType =
+        secret.type === "dockercfg" ? "kubernetes.io/dockercfg" : "Opaque";
+    }
+    if (secret.kubernetesType === "kubernetes.io/dockercfg") {
+      secret.kubernetesEnvName = ".dockercfg";
     }
   }
 }

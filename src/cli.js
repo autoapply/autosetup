@@ -1,10 +1,17 @@
+// @flow
+
+const fse = require("fs-extra");
 const argparse = require("argparse");
 
 require("pkginfo")(module);
 
 const { logger } = require("./utils");
-const config = require("./config");
+const { parseConfig } = require("./config");
 const setup = require("./setup");
+
+export type Options = {
+  output: string
+};
 
 async function main() {
   const parser = new argparse.ArgumentParser({
@@ -33,20 +40,45 @@ async function main() {
     logger.level = "debug";
   }
 
-  const cfg = await config.parseConfig(args.config);
+  const config = await parseConfig(args.config);
 
   const options = {
-    dryRun: !!args["dry_run"],
     output: args.output
   };
 
   try {
-    await setup.setup(cfg, options);
+    await run(config, options);
   } catch (e) {
     if (e.stack) {
       logger.debug("Error!", e.stack);
     }
     throw e;
+  }
+}
+
+async function run(config, options) {
+  const { output } = options;
+  if (output !== "-") {
+    const exists = await fse.exists(output);
+    if (exists) {
+      throw new Error("Output file exists: " + output);
+    }
+  }
+
+  const str = await setup.setup(config, options);
+
+  if (output === "-") {
+    logger.info("All templates successfully generated!");
+    // eslint-disable-next-line no-console
+    console.log(str);
+  } else {
+    const fd = await fse.open(output, "wx");
+    try {
+      await fse.write(fd, str + "\n");
+    } finally {
+      await fse.close(fd);
+    }
+    logger.info("File has been written successfully: %s", output);
   }
 }
 
