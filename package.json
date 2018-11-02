@@ -1,6 +1,6 @@
 {
   "name": "autosetup",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
@@ -12,6 +12,12 @@
   "bin": {
     "autosetup": "./dist/autosetup.js"
   },
+  "files": [
+    "dist",
+    "src",
+    "templates",
+    "example-config.yaml"
+  ],
   "scripts": {
     "lint": "eslint src/ test/",
     "test": "mocha --timeout=8000 --check-leaks --require babel-core/register test/",
