@@ -33,7 +33,7 @@ export type Config = {
   secrets: {
     [string]: Secret
   },
-  deployment: {
+  deployment: {|
     template: string,
     namespace: string,
     tolerations: boolean,
@@ -43,8 +43,8 @@ export type Config = {
       args: string
     },
     image: string,
-    path: string | [string]
-  }
+    path: string | string[]
+  |}
 };
 
 const defaultConfig: Config = {
@@ -64,7 +64,7 @@ const defaultConfig: Config = {
   }
 };
 
-function createConfig(repository: string): Config {
+function createConfig(repository: ?string): Config {
   const config = Object.assign({}, defaultConfig);
   config.deployment.repository = repository;
   return config;
@@ -93,4 +93,25 @@ async function parseConfig(name: string): Promise<Config> {
   return config;
 }
 
-module.exports = { createConfig, parseConfig };
+function updateConfig(config: Config, key: string, value: string) {
+  if (!key || !key.length) {
+    throw new Error("Missing argument: key");
+  }
+  const keys = key.replace(/\[([^\]]+)\]/g, ".$1").split(".");
+  let obj = config;
+  let setValue = () => {};
+  for (let k of keys) {
+    if (!k) {
+      throw new Error(`Invalid key: ${key}`);
+    }
+    if (obj == null) {
+      throw new Error(`Key refers to missing object: ${key} (${k})`);
+    }
+    const orig = obj;
+    setValue = () => (orig[k] = value);
+    obj = obj[k];
+  }
+  setValue();
+}
+
+module.exports = { createConfig, parseConfig, updateConfig };

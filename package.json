@@ -22,6 +22,7 @@
     "lint": "eslint src/ test/",
     "test": "mocha --timeout=8000 --check-leaks --require babel-core/register test/",
     "build": "babel src/ -d dist/",
+    "watch": "babel --watch src/ -d dist/",
     "prepublish": "yarn run build"
   },
   "dependencies": {

@@ -6,7 +6,7 @@ const argparse = require("argparse");
 require("pkginfo")(module);
 
 const { logger } = require("./utils");
-const { parseConfig } = require("./config");
+const { createConfig, parseConfig, updateConfig } = require("./config");
 const setup = require("./setup");
 
 export type Options = {
@@ -24,15 +24,20 @@ async function main() {
     action: "storeTrue",
     help: "Show debugging output"
   });
-  parser.addArgument(["config"], {
-    metavar: "<configuration>",
-    help: "Configuration file to use"
+  parser.addArgument(["-c"], {
+    metavar: "<name>=<value>",
+    action: "append",
+    help: "Set configuration values"
   });
-  parser.addArgument(["output"], {
+  parser.addArgument(["-o"], {
     metavar: "<output>",
     defaultValue: "-",
-    nargs: "?",
     help: "Output file to write"
+  });
+  parser.addArgument(["config"], {
+    metavar: "<configuration>",
+    nargs: "?",
+    help: "Configuration file to use"
   });
 
   const args = parser.parseArgs();
@@ -40,13 +45,25 @@ async function main() {
     logger.level = "debug";
   }
 
-  const config = await parseConfig(args.config);
-
-  const options = {
-    output: args.output
-  };
-
   try {
+    const config = args.config
+      ? await parseConfig(args.config)
+      : createConfig();
+
+    if (args.c) {
+      for (const arg of args.c) {
+        const arr = arg.split("=", 2);
+        if (arr.length !== 2) {
+          throw new Error(`Invalid argument: ${arg}`);
+        }
+        updateConfig(config, arr[0], arr[1]);
+      }
+    }
+
+    const options = {
+      output: args.o
+    };
+
     await run(config, options);
   } catch (e) {
     if (e.stack) {
@@ -82,4 +99,4 @@ async function run(config, options) {
   }
 }
 
-module.exports = { main };
+module.exports.main = main;
