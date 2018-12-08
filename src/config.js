@@ -37,6 +37,8 @@ export type Config = {
     template: string,
     namespace: string,
     tolerations: boolean,
+    prune: boolean,
+    pruneWhitelist: string[],
     sleep: number,
     repository?: string,
     git: {
@@ -55,6 +57,24 @@ const defaultConfig: Config = {
     template: "simple",
     namespace: "default",
     tolerations: true,
+    prune: false,
+    pruneWhitelist: [
+      "core/v1/ConfigMap",
+      "core/v1/Endpoints",
+      "core/v1/PersistentVolumeClaim",
+      "core/v1/Pod",
+      "core/v1/ReplicationController",
+      "core/v1/Secret",
+      "core/v1/Service",
+      "batch/v1/Job",
+      "batch/v1beta1/CronJob",
+      "extensions/v1beta1/DaemonSet",
+      "extensions/v1beta1/Deployment",
+      "extensions/v1beta1/Ingress",
+      "extensions/v1beta1/ReplicaSet",
+      "apps/v1beta1/StatefulSet",
+      "apps/v1beta1/Deployment"
+    ],
     sleep: 30,
     git: {
       args: "--depth 1 --single-branch"

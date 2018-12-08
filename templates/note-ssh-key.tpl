@@ -2,18 +2,18 @@
 #
 #   The following SSH key will be used to access the repository:
 #
-#   <%= publicKey %>
+#   <%- publicKey %>
 #
 #   Please make sure the key has access to this repository:
 #
-#   <%= ctx.deployment.repository.url %>
+#   <%- ctx.deployment.repository.url %>
 <% if (ctx.deployment.repository.github) { -%>
 #
 #   For this repository, you can manage deploy keys here:
-#   https://github.com/<%= ctx.deployment.repository.github.path %>/settings/keys
+#   https://github.com/<%- ctx.deployment.repository.github.path %>/settings/keys
 <% } else if (ctx.deployment.repository.gitlab) { -%>
 #
 #   For this repository, you can manage deploy keys here:
-#   https://gitlab.com/<%= ctx.deployment.repository.gitlab.path %>/settings/repository
+#   https://gitlab.com/<%- ctx.deployment.repository.gitlab.path %>/settings/repository
 #   (under section "Deploy Keys")
 <% } -%>

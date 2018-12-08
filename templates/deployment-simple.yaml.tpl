@@ -2,25 +2,28 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: autoapply
-  namespace: '<%= ctx.deployment.namespace %>'
+  namespace: '<%- ctx.deployment.namespace %>'
+  labels:
+    component: autoapply
 spec:
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
+        component: autoapply
         app: autoapply
     spec:
       serviceAccountName: autoapply
       containers:
         - name: autoapply
-          image: '<%= ctx.deployment.image %>'
+          image: '<%- ctx.deployment.image %>'
           args: ['env:AUTOAPPLY_CONFIG']
 <% if (ctx.secrets && Object.keys(ctx.secrets).length) { -%>
           envFrom:
 <%   Object.values(ctx.secrets).forEach(secret => { -%>
             - secretRef:
-                name: '<%= secret.kubernetesName %>'
+                name: '<%- secret.kubernetesName %>'
 <%   }); -%>
 <% } -%>
           env:
@@ -33,21 +36,25 @@ spec:
                     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
 <%   } -%>
 <%   if (ctx.secrets.hasOwnProperty("ssh")) { -%>
-                    - echo "${<%= ctx.secrets.ssh.kubernetesEnvName %>}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+                    - echo "${<%- ctx.secrets.ssh.kubernetesEnvName %>}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 <%   } -%>
 <%   if (ctx.secrets.hasOwnProperty("knownHosts")) { -%>
-                    - echo "${<%= ctx.secrets.knownHosts.kubernetesEnvName %>}" > ~/.ssh/known_hosts
+                    - echo "${<%- ctx.secrets.knownHosts.kubernetesEnvName %>}" > ~/.ssh/known_hosts
 <%   } -%>
 <% } -%>
                 loop:
-                  sleep: <%= ctx.deployment.sleep %>
+                  sleep: <%- ctx.deployment.sleep %>
                   commands:
-                    - git clone <%= ctx.deployment.git.args %> <%= ctx.deployment.repository.url %> '.'
+                    - git clone <%- ctx.deployment.git.args %> <%- ctx.deployment.repository.url %> '.'
 <% for (const path of ctx.deployment.path) { -%>
 <%   if (ctx.secrets.hasOwnProperty("yamlCrypt")) { -%>
-                    - yaml-crypt -k "env:<%= ctx.secrets.yamlCrypt.kubernetesEnvName %>" --dir --decrypt '<%= path %>'
+                    - yaml-crypt -k "env:<%- ctx.secrets.yamlCrypt.kubernetesEnvName %>" --dir --decrypt '<%- path %>'
 <%   } -%>
-                    - kubectl apply -f '<%= path %>'
+<%   if (ctx.deployment.prune) { -%>
+                    - kubectl apply --prune -l 'component!=autoapply' <%- ctx.deployment.pruneWhitelist.map(s => `--prune-whitelist '${s}'`).join(" ") %> -f '<%- path %>'
+<%   } else { -%>
+                    - kubectl apply -f '<%- path %>'
+<%   } -%>
 <% } -%>
 <% if (ctx.deployment.tolerations) { -%>
       tolerations:
@@ -56,5 +63,5 @@ spec:
 <% } -%>
 <% if (ctx.secrets.hasOwnProperty("dockercfg")) { -%>
       imagePullSecrets:
-        - name: <%= ctx.secrets.dockercfg.kubernetesName %>
+        - name: <%- ctx.secrets.dockercfg.kubernetesName %>
 <% } -%>

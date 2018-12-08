@@ -35,4 +35,13 @@ describe("setup", () => {
     const publicKey = await fse.readFile("./test/id_ed25519.pub", "ascii");
     expect(str).to.contain(publicKey.trim());
   });
+
+  it("should use the prune parameter", async function() {
+    const config = createConfig("https://github.com/help/help");
+    config.deployment.prune = true;
+    const options = { output: "-" };
+    const str = await setup(config, options);
+    expect(str).to.contain("--prune");
+    expect(str).to.contain("--prune-whitelist");
+  });
 });

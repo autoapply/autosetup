@@ -6,16 +6,16 @@
 <% } else { -%>
 #   To apply this model to your Kubernetes cluster, run
 #
-#     kubectl apply -f <%= ctx.output %>
+#     kubectl apply -f <%- ctx.output %>
 #
 #   If you want to remove the objects from your cluster, run
 #
-#     kubectl delete -f <%= ctx.output %>
+#     kubectl delete -f <%- ctx.output %>
 <%   if (ctx.deployment.namespace !== "default") { -%>
 #
-#   All objects will be created in the "<%= ctx.deployment.namespace %>" namespace,
+#   All objects will be created in the "<%- ctx.deployment.namespace %>" namespace,
 #   so to list all existing objects, run
 #
-#     kubectl get all -n <%= ctx.deployment.namespace %>
+#     kubectl get all -n <%- ctx.deployment.namespace %>
 <%   } -%>
 <% } -%>

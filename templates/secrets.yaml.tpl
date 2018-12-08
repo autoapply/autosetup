@@ -3,11 +3,13 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: '<%= secret.kubernetesName %>'
-  namespace: '<%= ctx.deployment.namespace %>'
-type: <%= secret.kubernetesType %>
+  name: '<%- secret.kubernetesName %>'
+  namespace: '<%- ctx.deployment.namespace %>'
+  labels:
+    component: autoapply
+type: <%- secret.kubernetesType %>
 data:
-  <%= secret.kubernetesEnvName %>: '<%= secret.valueBase64 %>'
+  <%- secret.kubernetesEnvName %>: '<%- secret.valueBase64 %>'
 ---
 <%   }); -%>
 <% } -%>

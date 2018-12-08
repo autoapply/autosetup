@@ -14,7 +14,7 @@ import type { Options } from "./cli";
 export type Context = {
   version: string,
   output: string,
-  notes: Array<String>,
+  notes: string[],
   model: string,
   secrets: {
     [string]: {
@@ -37,7 +37,9 @@ export type Context = {
       url: string,
       urlType: "ssh" | "http" | "https" | "unknown"
     },
-    path: [string],
+    path: string[],
+    prune: boolean,
+    pruneWhitelist: string[],
     sleep: number
   }
 };
@@ -67,6 +69,8 @@ async function setup(config: Config, options: Options): Promise<string> {
       path: Array.isArray(config.deployment.path)
         ? config.deployment.path
         : [config.deployment.path],
+      prune: config.deployment.prune,
+      pruneWhitelist: config.deployment.pruneWhitelist,
       sleep: config.deployment.sleep
     },
     secrets: await getSecretsContext(config)

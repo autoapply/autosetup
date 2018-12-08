@@ -2,5 +2,5 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: '<%= ctx.deployment.namespace %>'
+  name: '<%- ctx.deployment.namespace %>'
 <% } -%>
