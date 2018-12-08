@@ -10,7 +10,7 @@ Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernet
 $ yarn global add autosetup
 $ vi config.yaml
 # edit config.yaml as required...
-$ autosetup config.yaml output.yaml
+$ autosetup -o output.yaml config.yaml
 $ cat output.yaml
 $ kubectl apply -f output.yaml
 ```
