@@ -67,7 +67,7 @@ async function main() {
     await run(config, options);
   } catch (e) {
     if (e.stack) {
-      logger.debug("Error!", e.stack);
+      logger.debug(e.stack);
     }
     throw e;
   }
@@ -78,7 +78,7 @@ async function run(config, options) {
   if (output !== "-") {
     const exists = await fse.exists(output);
     if (exists) {
-      throw new Error("Output file exists: " + output);
+      throw new Error(`Output file exists: ${output}`);
     }
   }
 
@@ -95,7 +95,7 @@ async function run(config, options) {
     } finally {
       await fse.close(fd);
     }
-    logger.info("File has been written successfully: %s", output);
+    logger.info(`File has been written successfully: ${output}`);
   }
 }
 

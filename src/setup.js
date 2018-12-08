@@ -151,7 +151,7 @@ async function getSecretsContext(config) {
       value = secret.value;
     } else if (secret.type === "ssh-key") {
       const sshKey = await ssh.generateKey(secret.keySize);
-      logger.debug("Generated public SSH key: %s", sshKey.publicKey);
+      logger.debug(`Generated public SSH key: ${sshKey.publicKey}`);
       value = sshKey.privateKey;
     } else {
       throw new Error("Invalid secret: " + name);
@@ -175,9 +175,7 @@ async function loadSecretValue(config, secret) {
   }
   if (provider.type === "azure-key-vault") {
     logger.info(
-      "Loading secret from %s: %s...",
-      provider.keyVault,
-      secret.source.name
+      `Loading secret from ${provider.keyVault}: ${secret.source.name}...`
     );
     return await azure.loadSecret(
       provider.subscription,

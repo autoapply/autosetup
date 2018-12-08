@@ -1,9 +1,8 @@
 // @flow
 
 const path = require("path");
+const childProcess = require("child_process");
 
-const winston = require("winston");
-const spawn = require("child-process-promise").spawn;
 const fse = require("fs-extra");
 const ejs = require("ejs");
 
@@ -11,17 +10,17 @@ import type { Context } from "./setup";
 
 const templatesPath = path.resolve(__dirname, "../templates");
 
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.splat(),
-    winston.format.simple()
-  ),
-  transports: [
-    new winston.transports.Console({
-      stderrLevels: Object.keys(winston.config.npm.levels)
-    })
-  ]
-});
+const logger = {
+  level: "info",
+  debug: msg => {
+    if (logger.level === "debug") {
+      // eslint-disable-next-line no-console
+      console.error("debug:", msg);
+    }
+  },
+  // eslint-disable-next-line no-console
+  info: msg => console.error("info:", msg)
+};
 
 async function template(name: string, context: Context, args: any = {}) {
   const content = await fse.readFile(path.resolve(templatesPath, name), "utf8");
@@ -45,20 +44,35 @@ async function template(name: string, context: Context, args: any = {}) {
   return ejs.render(content, Object.assign({ ctx: proxy(context) }, args));
 }
 
-async function run(cmd: string, args: Array<string>) {
+function run(cmd: string, args: Array<string>) {
   const cmdStr = [cmd, ...args].join(" ");
-  logger.debug("Executing command: %s", cmdStr);
-  const options = { capture: ["stdout", "stderr"] };
-  const result = await spawn(cmd, args, options).then(
-    result => result,
-    e => {
-      logger.debug("Error executing command: %s", cmdStr);
-      logger.debug("stdout: %s", (e.stdout || "").trimRight());
-      logger.debug("stderr: %s", (e.stderr || "").trimRight());
-      throw e;
-    }
-  );
-  return result.stdout;
+  logger.debug(`Executing command: ${cmdStr}`);
+  return new Promise((resolve, reject) => {
+    const result = {
+      stdout: Buffer.alloc(0),
+      stderr: Buffer.alloc(0)
+    };
+    const process = childProcess.spawn(cmd, args);
+    process.stdout.on("data", data => {
+      result.stdout += data;
+    });
+    process.stderr.on("data", data => {
+      result.stderr += data;
+    });
+    process.on("error", reject);
+    process.on("close", code => {
+      const stdout = result.stdout.toString("utf8").trim();
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        const stderr = result.stderr.toString().trim();
+        logger.debug(`Error executing command: ${cmdStr}`);
+        logger.debug(`stdout: ${stdout}`);
+        logger.debug(`stderr: ${stderr}`);
+        reject(new Error(`Command failed: ${cmdStr}`));
+      }
+    });
+  });
 }
 
 module.exports = { logger, template, run };
