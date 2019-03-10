@@ -4,6 +4,8 @@
 
 Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernetes cluster.
 
+<img src="https://autoapply.github.io/autosetup/demo.svg" width="600">
+
 ## Usage
 
 ```bash
