@@ -50,11 +50,12 @@ spec:
 <%   if (ctx.secrets.hasOwnProperty("yamlCrypt")) { -%>
                     - yaml-crypt -k "env:<%- ctx.secrets.yamlCrypt.kubernetesEnvName %>" --dir --decrypt '<%- path %>'
 <%   } -%>
-<%   if (ctx.deployment.prune) { -%>
-                    - kubectl apply --prune -l 'component!=autoapply' <%- ctx.deployment.pruneWhitelist.map(s => `--prune-whitelist '${s}'`).join(" ") %> -f '<%- path %>'
-<%   } else { -%>
-                    - kubectl apply -f '<%- path %>'
-<%   } -%>
+<% } -%>
+<% const paths = ctx.deployment.path.map(s => `-f '${s}'`).join(" "); -%>
+<% if (ctx.deployment.prune) { -%>
+                    - kubectl apply --prune -l 'component!=autoapply' <%- ctx.deployment.pruneWhitelist.map(s => `--prune-whitelist '${s}'`).join(" ") %> <%- paths %>
+<% } else { -%>
+                    - kubectl apply <%- paths %>
 <% } -%>
 <% if (ctx.deployment.tolerations) { -%>
       tolerations:
