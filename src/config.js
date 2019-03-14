@@ -79,7 +79,7 @@ const defaultConfig: Config = {
     git: {
       args: "--depth 1 --single-branch"
     },
-    image: "autoapply/autoapply:0.8.0-kubectl",
+    image: "autoapply/autoapply:0.8.3-kubectl",
     path: "."
   }
 };
