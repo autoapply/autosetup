@@ -84,6 +84,8 @@ const defaultConfig: Config = {
   }
 };
 
+type Operation = "+" | "=" | "-";
+
 function createConfig(repository: ?string): Config {
   const config = Object.assign({}, defaultConfig);
   config.deployment.repository = repository;
@@ -113,10 +115,8 @@ async function parseConfig(name: string): Promise<Config> {
   return config;
 }
 
-function updateConfig(config: Config, key: string, value: string) {
-  if (!key || !key.length) {
-    throw new Error("Missing argument: key");
-  }
+function updateConfig(config: Config, str: string) {
+  const { key, op, value } = split(str);
   const keys = key.replace(/\[([^\]]+)\]/g, ".$1").split(".");
   let obj = config;
   let setValue = () => {};
@@ -128,10 +128,39 @@ function updateConfig(config: Config, key: string, value: string) {
       throw new Error(`Key refers to missing object: ${key} (${k})`);
     }
     const orig = obj;
-    setValue = () => (orig[k] = value);
+    setValue = () => {
+      if (op === "+" || op === "-") {
+        if (orig[k] == null) {
+          orig[k] = [];
+        } else if (!Array.isArray(orig[k])) {
+          orig[k] = [orig[k]];
+        }
+        if (op === "+") {
+          orig[k].push(value);
+        } else if (op === "-") {
+          orig[k] = orig[k].filter(s => s !== value);
+        }
+      } else {
+        orig[k] = value;
+      }
+    };
     obj = obj[k];
   }
   setValue();
+}
+
+function split(str: string): { key: string, op: Operation, value: string } {
+  const arr = str.split("=", 2);
+  if (arr.length !== 2) {
+    throw new Error(`Invalid argument: ${str}`);
+  }
+  const value = arr[1].trim();
+  if (arr[0].slice(-1) === "+" || arr[0].slice(-1) === "-") {
+    const key = arr[0].slice(0, -1).trim();
+    return { key, op: arr[0].slice(-1), value };
+  } else {
+    return { key: arr[0].trim(), op: "=", value };
+  }
 }
 
 module.exports = { createConfig, parseConfig, updateConfig };

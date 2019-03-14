@@ -52,11 +52,7 @@ async function main() {
 
     if (args.c) {
       for (const arg of args.c) {
-        const arr = arg.split("=", 2);
-        if (arr.length !== 2) {
-          throw new Error(`Invalid argument: ${arg}`);
-        }
-        updateConfig(config, arr[0], arr[1]);
+        updateConfig(config, arg);
       }
     }
 
