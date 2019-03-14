@@ -8,11 +8,15 @@ Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernet
 
 ## Usage
 
+Install it using `yarn global add autosetup` or `npm install -g autosetup`.
+Alternatively, you can also use the Docker image `autoapply/autosetup`.
+
 ```bash
-$ yarn global add autosetup
-$ vi config.yaml
-# edit config.yaml as required...
-$ autosetup -o output.yaml config.yaml
+$ autosetup \
+    -c deployment.repository=https://github.com/autoapply/autoapply \
+    -c deployment.path=docs/examples/nginx.yaml \
+    -o output.yaml
+info: File has been written successfully: output.yaml
 $ cat output.yaml
 $ kubectl apply -f output.yaml
 ```
@@ -23,8 +27,8 @@ A basic configuration file looks like this:
 
 ```yaml
 deployment:
-  repository: 'https://github.com/kubernetes/examples'
-  path: 'guestbook/all-in-one'
+  repository: "https://github.com/autoapply/autoapply"
+  path: "docs/examples/nginx.yaml"
 ```
 
 For more details, see [example-config.yaml](example-config.yaml).

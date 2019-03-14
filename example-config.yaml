@@ -35,6 +35,10 @@ deployment:
   # optional, the Kubernetes namespace where the autoapply objects will be created
   namespace: autoapply-test
   # required, the repository from where to download Kubernetes object files
-  repository: 'git@github.com:autoapply/autoapply.git'
+  repository: "git@github.com:autoapply/autoapply.git"
   # optional, the path within the repository
   path: docs/examples/nginx.yaml
+  # optional, a list of commands to execute after the repository has been cloned
+  build:
+    - echo "Building..."
+    - ./build.sh

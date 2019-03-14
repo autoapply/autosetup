@@ -55,6 +55,10 @@ async function setup(config: Config, options: Options): Promise<string> {
     );
   }
 
+  function toArray(arg: string | string[]): string[] {
+    return Array.isArray(arg) ? arg : [arg];
+  }
+
   const context: Context = {
     version: module.exports.version,
     output: options.output,
@@ -66,9 +70,8 @@ async function setup(config: Config, options: Options): Promise<string> {
       image: config.deployment.image,
       git: config.deployment.git,
       repository: getRepositoryContext(config),
-      path: Array.isArray(config.deployment.path)
-        ? config.deployment.path
-        : [config.deployment.path],
+      path: toArray(config.deployment.path),
+      build: toArray(config.deployment.build),
       prune: config.deployment.prune,
       pruneWhitelist: config.deployment.pruneWhitelist,
       sleep: config.deployment.sleep

@@ -46,6 +46,9 @@ spec:
                   sleep: <%- ctx.deployment.sleep %>
                   commands:
                     - git clone <%- ctx.deployment.git.args %> <%- ctx.deployment.repository.url %> '.'
+<% for (const command of ctx.deployment.build) { -%>
+                    - <%- isNaN(command) ? command : `'${command}'` %>
+<% } -%>
 <% for (const path of ctx.deployment.path) { -%>
 <%   if (ctx.secrets.hasOwnProperty("yamlCrypt")) { -%>
                     - yaml-crypt -k "env:<%- ctx.secrets.yamlCrypt.kubernetesEnvName %>" --dir --decrypt '<%- path %>'

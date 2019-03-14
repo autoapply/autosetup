@@ -41,6 +41,7 @@ export type Config = {
     pruneWhitelist: string[],
     sleep: number,
     repository?: string,
+    build: string | string[],
     git: {
       args: string
     },
@@ -76,6 +77,7 @@ const defaultConfig: Config = {
       "apps/v1beta1/Deployment"
     ],
     sleep: 30,
+    build: [],
     git: {
       args: "--depth 1 --single-branch"
     },
@@ -110,6 +112,13 @@ async function parseConfig(name: string): Promise<Config> {
       }
     } catch (e) {
       throw new Error("Invalid secret " + name + ": " + e.message);
+    }
+  }
+  if (Array.isArray(config.deployment.build)) {
+    for (const command of config.deployment.build) {
+      if (typeof command !== "string") {
+        throw new Error("Invalid build command: " + command);
+      }
     }
   }
   return config;
