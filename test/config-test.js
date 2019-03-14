@@ -10,16 +10,16 @@ describe("config", () => {
     const config = {
       a: 1
     };
-    updateConfig(config, "a", 2);
-    expect(config.a).equals(2);
+    updateConfig(config, "a=2");
+    expect(config.a).equals("2");
   });
 
   it("should update the config (add new entry)", function() {
     const config = {
       a: 1
     };
-    updateConfig(config, "b", 2);
-    expect(config.b).equals(2);
+    updateConfig(config, "b=2");
+    expect(config.b).equals("2");
   });
 
   it("should update the config (nested)", function() {
@@ -32,15 +32,15 @@ describe("config", () => {
         ]
       }
     };
-    updateConfig(config, "a.b[0].c", 2);
-    expect(config.a.b[0].c).equals(2);
+    updateConfig(config, "a.b[0].c=2");
+    expect(config.a.b[0].c).equals("2");
   });
 
   it("should not update the config when key is invalid", function() {
     const config = {
       a: 1
     };
-    expect(() => updateConfig(config, "b.c.d", 2)).throws(
+    expect(() => updateConfig(config, "b.c.d=2")).throws(
       "Key refers to missing object: b.c.d (c)"
     );
   });
