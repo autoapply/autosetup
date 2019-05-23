@@ -19,7 +19,9 @@ const logger = {
     }
   },
   // eslint-disable-next-line no-console
-  info: msg => console.error("info:", msg)
+  info: msg => console.error("info:", msg),
+  // eslint-disable-next-line no-console
+  warn: msg => console.error("warn:", msg)
 };
 
 async function template(name: string, context: Context, args: any = {}) {
