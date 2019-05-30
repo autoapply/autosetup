@@ -88,7 +88,7 @@ const defaultConfig: Config = {
 
 type Operation = "+" | "=" | "-";
 
-function createConfig(repository: ?string): Config {
+function createConfig(repository?: string): Config {
   const config = Object.assign({}, defaultConfig);
   config.deployment.repository = repository;
   return config;
@@ -164,9 +164,10 @@ function split(str: string): { key: string, op: Operation, value: string } {
     throw new Error(`Invalid argument: ${str}`);
   }
   const value = arr[1].trim();
-  if (arr[0].slice(-1) === "+" || arr[0].slice(-1) === "-") {
+  const op = arr[0].slice(-1);
+  if (op === "+" || op === "-") {
     const key = arr[0].slice(0, -1).trim();
-    return { key, op: arr[0].slice(-1), value };
+    return { key, op, value };
   } else {
     return { key: arr[0].trim(), op: "=", value };
   }

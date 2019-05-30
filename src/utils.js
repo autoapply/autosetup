@@ -12,16 +12,16 @@ const templatesPath = path.resolve(__dirname, "../templates");
 
 const logger = {
   level: "info",
-  debug: msg => {
+  debug: (msg: string) => {
     if (logger.level === "debug") {
       // eslint-disable-next-line no-console
       console.error("debug:", msg);
     }
   },
   // eslint-disable-next-line no-console
-  info: msg => console.error("info:", msg),
+  info: (msg: string) => console.error("info:", msg),
   // eslint-disable-next-line no-console
-  warn: msg => console.error("warn:", msg)
+  warn: (msg: string) => console.error("warn:", msg)
 };
 
 async function template(name: string, context: Context, args: any = {}) {
@@ -47,9 +47,9 @@ async function template(name: string, context: Context, args: any = {}) {
 }
 
 function run(cmd: string, args: Array<string>) {
-  const cmdStr = [cmd, ...args].join(" ");
-  logger.debug(`Executing command: ${cmdStr}`);
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
+    const cmdStr = [cmd, ...args].join(" ");
+    logger.debug(`Executing command: ${cmdStr}`);
     const result = {
       stdout: Buffer.alloc(0),
       stderr: Buffer.alloc(0)

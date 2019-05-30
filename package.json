@@ -1,6 +1,6 @@
 {
   "name": "autosetup",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "lint": "eslint src/ test/",
-    "test": "mocha --timeout=8000 --check-leaks --require babel-core/register test/",
+    "test": "mocha --timeout=8000 --check-leaks --require @babel/register test/",
     "build": "babel src/ -d dist/",
     "watch": "babel --watch src/ -d dist/",
     "prepublish": "yarn run build"
@@ -29,21 +29,23 @@
     "argparse": "^1.0.9",
     "deepmerge": "^3.2.0",
     "ejs": "^2.6.1",
-    "fs-extra": "^7.0.1",
-    "js-yaml": "^3.12.2",
+    "fs-extra": "^8.0.1",
+    "js-yaml": "^3.13.1",
     "pkginfo": "^0.4.1",
-    "tmp-promise": "^1.0.5"
+    "tmp-promise": "^2.0.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.4.4",
     "babel-eslint": "^10.0.1",
-    "babel-preset-flow": "^6.23.0",
     "chai": "^4.2.0",
     "ejs-lint": "^0.3.0",
-    "eslint": "^5.15.1",
-    "eslint-plugin-flowtype": "^3.4.2",
-    "flow-bin": "^0.94.0",
-    "mocha": "^6.0.2",
+    "eslint": "^5.16.0",
+    "eslint-plugin-flowtype": "^3.9.1",
+    "flow-bin": "^0.99.1",
+    "mocha": "^6.1.4",
     "svg-term-cli": "^2.1.1"
   }
 }

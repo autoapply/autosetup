@@ -7,7 +7,7 @@ const { updateConfig } = require("../src/config");
 
 describe("config", () => {
   it("should update the config (simple)", function() {
-    const config = {
+    const config: any = {
       a: 1
     };
     updateConfig(config, "a=2");
@@ -15,7 +15,7 @@ describe("config", () => {
   });
 
   it("should update the config (add new entry)", function() {
-    const config = {
+    const config: any = {
       a: 1
     };
     updateConfig(config, "b=2");
@@ -23,7 +23,7 @@ describe("config", () => {
   });
 
   it("should update the config (nested)", function() {
-    const config = {
+    const config: any = {
       a: {
         b: [
           {
@@ -37,7 +37,7 @@ describe("config", () => {
   });
 
   it("should not update the config when key is invalid", function() {
-    const config = {
+    const config: any = {
       a: 1
     };
     expect(() => updateConfig(config, "b.c.d=2")).throws(
