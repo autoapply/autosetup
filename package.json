@@ -44,7 +44,7 @@
     "ejs-lint": "^0.3.0",
     "eslint": "^5.16.0",
     "eslint-plugin-flowtype": "^3.9.1",
-    "flow-bin": "^0.99.1",
+    "flow-bin": "^0.101.0",
     "mocha": "^6.1.4",
     "svg-term-cli": "^2.1.1"
   }
