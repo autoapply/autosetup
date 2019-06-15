@@ -4,7 +4,11 @@
 
 Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernetes cluster.
 
-<img src="https://autoapply.github.io/autosetup/demo.svg" width="600">
+![Technical overview](https://autoapply.github.io/autosetup/overview.svg)
+
+1. Create a configuration file with the repository URL and required secrets
+2. Run autosetup to create a Kubernetes resource file based on the configuration file
+3. Apply the resource file to your Kubernetes cluster to create the autoapply deployment
 
 ## Usage
 
@@ -20,6 +24,8 @@ info: File has been written successfully: output.yaml
 $ cat output.yaml
 $ kubectl apply -f output.yaml
 ```
+
+<img src="https://autoapply.github.io/autosetup/demo.svg" width="600">
 
 ## Configuration
 
