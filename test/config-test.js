@@ -1,13 +1,11 @@
-// @flow
-
 const { describe, it } = require("mocha");
 const { expect } = require("chai");
 
-const { updateConfig } = require("../src/config");
+const { updateConfig } = require("../lib/config");
 
 describe("config", () => {
   it("should update the config (simple)", function() {
-    const config: any = {
+    const config = {
       a: 1
     };
     updateConfig(config, "a=2");
@@ -15,7 +13,7 @@ describe("config", () => {
   });
 
   it("should update the config (add new entry)", function() {
-    const config: any = {
+    const config = {
       a: 1
     };
     updateConfig(config, "b=2");
@@ -23,7 +21,7 @@ describe("config", () => {
   });
 
   it("should update the config (nested)", function() {
-    const config: any = {
+    const config = {
       a: {
         b: [
           {
@@ -37,7 +35,7 @@ describe("config", () => {
   });
 
   it("should not update the config when key is invalid", function() {
-    const config: any = {
+    const config = {
       a: 1
     };
     expect(() => updateConfig(config, "b.c.d=2")).throws(

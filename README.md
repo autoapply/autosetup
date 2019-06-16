@@ -7,8 +7,8 @@ Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernet
 ![Technical overview](https://autoapply.github.io/autosetup/overview.svg)
 
 1. Create a configuration file with the repository URL and required secrets
-2. Run autosetup to create a Kubernetes resource file based on the configuration file
-3. Apply the resource file to your Kubernetes cluster to create the autoapply deployment
+2. Run autosetup to create Kubernetes resource files based on the configuration file
+3. Apply the resource files to your Kubernetes cluster to create the autoapply deployment
 
 ## Usage
 
@@ -17,8 +17,8 @@ Alternatively, you can also use the Docker image `autoapply/autosetup`.
 
 ```bash
 $ autosetup \
-    -c deployment.repository=https://github.com/autoapply/autoapply \
-    -c deployment.path=docs/examples/nginx.yaml \
+    -c git.url=https://github.com/autoapply/template-kubectl \
+    -c 'git.path=["common","dev"]' \
     -o output.yaml
 info: File has been written successfully: output.yaml
 $ cat output.yaml
@@ -29,20 +29,38 @@ $ kubectl apply -f output.yaml
 
 ## Configuration
 
-A basic configuration file looks like this:
+A simple configuration file looks like this:
 
 ```yaml
-deployment:
-  repository: "https://github.com/autoapply/autoapply"
-  path: "docs/examples/nginx.yaml"
+git:
+  url: "https://github.com/autoapply/template-kubectl"
+  path:
+    - "common"
+    - "dev"
 ```
 
 For more details, see [example-config.yaml](example-config.yaml).
 
-## Docker
+### SSH key
 
-To run with Docker, use `docker run --rm -it autoapply/autosetup --help`
+The SSH key to access git repositories can be generated using
+
+```bash
+$ ssh-keygen -N '' -m PEM -b 4096 -t rsa -f id_rsa -C autoapply
+```
+
+### yaml-crypt keys
+
+A new [yaml-crypt](https://github.com/autoapply/yaml-crypt) key can be generated using
+
+```bash
+$ yaml-crypt --generate-key
+```
+
+### sops configuration
+
+For information on how to setup sops, see the [documentation](https://github.com/mozilla/sops).
 
 ## License
 
-Autosetup is licensed under the [MIT License](LICENSE)
+[MIT](LICENSE)

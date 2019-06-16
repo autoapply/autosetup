@@ -1,25 +1,29 @@
-// @flow
+#!/usr/bin/env node
+
+"use strict";
 
 const fse = require("fs-extra");
-const argparse = require("argparse");
+const { ArgumentParser } = require("argparse");
 
 require("pkginfo")(module);
 
-const { logger } = require("./utils");
-const { createConfig, parseConfig, updateConfig } = require("./config");
-const setup = require("./setup");
-
-export type Options = {
-  output: string
-};
+const { logger } = require("../lib/utils");
+const {
+  readConfig,
+  updateConfig,
+  checkConfig,
+  ConfigError
+} = require("../lib/config");
+const { prepare, generate } = require("../lib/autosetup");
 
 async function main() {
-  const parser = new argparse.ArgumentParser({
+  const parser = new ArgumentParser({
     prog: module.exports.name,
     version: module.exports.version,
     addHelp: true,
     description: module.exports.description
   });
+
   parser.addArgument(["-d", "--debug"], {
     action: "storeTrue",
     help: "Show debugging output"
@@ -46,9 +50,7 @@ async function main() {
   }
 
   try {
-    const config = args.config
-      ? await parseConfig(args.config)
-      : createConfig();
+    const config = await readConfig(args.config);
 
     if (args.c) {
       for (const arg of args.c) {
@@ -56,21 +58,26 @@ async function main() {
       }
     }
 
-    const options = {
-      output: args.o
-    };
+    await checkConfig(config);
 
-    await run(config, options);
+    await run(config, args.o);
   } catch (e) {
-    if (e.stack) {
+    if (e instanceof ConfigError) {
+      const { errors } = e;
+      for (const error of errors) {
+        // eslint-disable-next-line no-console
+        console.error(
+          (error.dataPath ? `In path ${error.dataPath}: ` : "") + error.message
+        );
+      }
+    } else if (e.stack) {
       logger.debug(e.stack);
     }
     throw e;
   }
 }
 
-async function run(config, options) {
-  const { output } = options;
+async function run(config, output) {
   if (output !== "-") {
     const exists = await fse.exists(output);
     if (exists) {
@@ -78,7 +85,9 @@ async function run(config, options) {
     }
   }
 
-  const str = await setup.setup(config, options);
+  await prepare(config);
+
+  const str = await generate(config);
 
   if (output === "-") {
     logger.info("All templates successfully generated!");
@@ -93,6 +102,14 @@ async function run(config, options) {
     }
     logger.info(`File has been written successfully: ${output}`);
   }
+}
+
+if (require.main === module) {
+  main().catch(err => {
+    process.exitCode = 1;
+    // eslint-disable-next-line no-console
+    console.error(err.message || "unknown error!");
+  });
 }
 
 module.exports.main = main;

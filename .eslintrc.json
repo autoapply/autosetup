@@ -1,5 +1,4 @@
 {
-  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 8,
     "sourceType": "module"
@@ -8,8 +7,7 @@
     "node": true,
     "es6": true
   },
-  "plugins": ["flowtype"],
-  "extends": ["eslint:recommended", "plugin:flowtype/recommended"],
+  "extends": ["eslint:recommended"],
   "rules": {
     "max-len": ["error", 80],
     "semi": "error",

@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "path": {
+          "type": "array",
+          "minItems": 1,
+          "default": ["."],
+          "items": {
+            "type": "string"
+          }
+        },
+        "args": {
+          "type": "string",
+          "default": "--depth 1 --single-branch"
+        }
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "ssh": {
+          "type": "string",
+          "default": ""
+        },
+        "ssh-host-key": {
+          "type": "string",
+          "default": ""
+        },
+        "docker": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["server", "username", "password"],
+            "properties": {
+              "server": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "dockercfg": {
+          "type": "string"
+        },
+        "yaml-crypt": {
+          "type": "array",
+          "default": [],
+          "items": { "type": "string" }
+        },
+        "sops": {
+          "type": "object",
+          "default": {},
+          "propertyNames": {
+            "pattern": "^[A-Za-z0-9_]+$"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "others": {
+          "type": "object",
+          "default": {},
+          "propertyNames": {
+            "pattern": "^[A-Za-z0-9_]+$"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "kubernetes": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "default": "default"
+        },
+        "kustomize": {
+          "type": "boolean",
+          "default": false
+        },
+        "prune": {
+          "type": "boolean",
+          "default": true
+        },
+        "prune-whitelist": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "core/v1/ConfigMap",
+            "core/v1/Endpoints",
+            "core/v1/PersistentVolumeClaim",
+            "core/v1/Pod",
+            "core/v1/ReplicationController",
+            "core/v1/Secret",
+            "core/v1/Service",
+            "batch/v1/Job",
+            "batch/v1beta1/CronJob",
+            "extensions/v1beta1/DaemonSet",
+            "extensions/v1beta1/Deployment",
+            "extensions/v1beta1/Ingress",
+            "extensions/v1beta1/ReplicaSet",
+            "apps/v1beta1/StatefulSet",
+            "apps/v1beta1/Deployment"
+          ]
+        },
+        "tolerations": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "autoapply": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": "autoapply/autoapply:0.10.1-kubectl"
+        },
+        "sleep": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 30
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "$git-clone",
+            "$yaml-crypt-decrypt",
+            "$sops-decrypt",
+            "$kubectl-apply"
+          ]
+        }
+      }
+    }
+  }
+}

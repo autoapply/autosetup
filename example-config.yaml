@@ -1,44 +1,32 @@
-# optional, the secret providers from where to fetch secrets
-secretProviders:
-  azureKeyVault1:
-    type: azure-key-vault
-    subscription: my-azure-subscription-id
-    keyVault: keyvault-1
-secrets:
-  # optional, the SSH key used to access the repository
-  # can be generated using ssh-keygen
-  ssh:
-    type: ssh-key
-    source:
-      provider: azureKeyVault1
-      name: autoapply-ssh
-  # optional, the SSH public host key used to access the repository
-  # can be generated using ssh-keyscan
-  knownHosts:
-    type: raw
-    source:
-      provider: azureKeyVault1
-      name: autoapply-knownHosts
-  # optional, the dockercfg that will be used to access the docker registry
-  dockercfg:
-    type: dockercfg
-    source:
-      provider: azureKeyVault1
-      name: dockercfg-1
-  # optional, the yaml-crypt key to decrypt the secret files
-  yamlCrypt:
-    type: raw
-    source:
-      provider: azureKeyVault1
-      name: yaml-crypt-1
-deployment:
-  # optional, the Kubernetes namespace where the autoapply objects will be created
-  namespace: autoapply-test
-  # required, the repository from where to download Kubernetes object files
-  repository: "git@github.com:autoapply/autoapply.git"
+git:
+  # required, the git repository from where to download Kubernetes object files
+  url: "git@github.com:autoapply/template-kubectl.git"
   # optional, the path within the repository
-  path: docs/examples/nginx.yaml
-  # optional, a list of commands to execute after the repository has been cloned
-  build:
-    - echo "Building..."
-    - ./build.sh
+  path:
+    - "."
+secrets:
+  # optional, the SSH key used to access the repository, can be generated
+  # using "ssh-keygen" (please check the correct indentation here!)
+  ssh: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIJKQIBAAKCAgEA0tI0gtK7uc60kiQ1RcVAcg2r896uXZR5qWAPZbC53g5iwqwb
+    VqRydbSMzuOlSXu7EL2h...
+    -----END RSA PRIVATE KEY-----
+  # optional, the credentials that will be used to access the Docker registry
+  dockercfg: ""
+  # optional, the yaml-crypt keys to decrypt secret files in the repository
+  # see https://github.com/autoapply/yaml-crypt for more information
+  yaml-crypt:
+    - ""
+  # optional, the parameters that should be passed to sops
+  # see https://github.com/mozilla/sops#usage for more information
+  # on which environment variables are required for decryption
+  sops:
+    AZURE_TENANT_ID: ""
+    AZURE_CLIENT_ID: ""
+kubernetes:
+  # optional, the namespace where the Kubernetes objects will be created
+  namespace: "default"
+  # optional, whether to run "kubectl kustomize", see
+  # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
+  kustomize: false
