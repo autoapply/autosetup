@@ -13,6 +13,7 @@ describe("autosetup", () => {
   it("should create the expected output", async () => {
     const config = await readConfig();
     config.git.url = "https://github.com/autoapply/template-kubectl";
+    config.secrets.gpg = ".";
 
     const output = await generate(config);
 

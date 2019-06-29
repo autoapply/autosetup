@@ -33,6 +33,17 @@ subjects:
 - kind: ServiceAccount
   name: autoapply
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: autoapply-secret
+  namespace: 'default'
+  labels:
+    component: autoapply
+type: Opaque
+data:
+  GPG: 'Lg=='
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -56,15 +67,21 @@ spec:
       serviceAccountName: autoapply
       containers:
         - name: autoapply
-          image: 'autoapply/autoapply:0.10.1-kubectl'
+          image: 'autoapply/autoapply:0.11.0-kubectl'
           args: ['env:AUTOAPPLY_CONFIG']
+          envFrom:
+            - secretRef:
+                name: autoapply-secret
           env:
             - name: AUTOAPPLY_CONFIG
               value: |
+                init:
+                  commands:
+                    - echo "${GPG}" | gpg --import
                 loop:
                   sleep: 30
                   commands:
-                    - git clone --depth 1 --single-branch https://github.com/autoapply/template-kubectl '.'
+                    - git clone --depth 1 --single-branch 'https://github.com/autoapply/template-kubectl' '.'
                     - kubectl apply --prune -l 'component!=autoapply' --prune-whitelist 'core/v1/ConfigMap' --prune-whitelist 'core/v1/Endpoints' --prune-whitelist 'core/v1/PersistentVolumeClaim' --prune-whitelist 'core/v1/Pod' --prune-whitelist 'core/v1/ReplicationController' --prune-whitelist 'core/v1/Secret' --prune-whitelist 'core/v1/Service' --prune-whitelist 'batch/v1/Job' --prune-whitelist 'batch/v1beta1/CronJob' --prune-whitelist 'extensions/v1beta1/DaemonSet' --prune-whitelist 'extensions/v1beta1/Deployment' --prune-whitelist 'extensions/v1beta1/Ingress' --prune-whitelist 'extensions/v1beta1/ReplicaSet' --prune-whitelist 'apps/v1beta1/StatefulSet' --prune-whitelist 'apps/v1beta1/Deployment' -f '.'
       tolerations:
         - effect: NoExecute

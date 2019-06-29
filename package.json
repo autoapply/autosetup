@@ -1,6 +1,6 @@
 {
   "name": "autosetup",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "lint": "eslint bin/ lib/ test/",
-    "test": "mocha --timeout=8000 --check-leaks test/"
+    "test": "mocha --timeout=8000 --check-leaks test/",
+    "prepublish": "yarn lint && yarn test"
   },
   "dependencies": {
     "ajv": "^6.10.0",
