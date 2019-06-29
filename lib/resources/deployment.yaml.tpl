@@ -31,15 +31,27 @@ spec:
           env:
             - name: AUTOAPPLY_CONFIG
               value: |
-<% if (ctx.secrets.hasOwnProperty("SSH") || ctx.secrets.hasOwnProperty("SSH_HOST_KEY")) { -%>
+<% if (ctx.config.autoapply.init.length > 0) { -%>
                 init:
                   commands:
+<%   for (const command of ctx.config.autoapply.init) { -%>
+<%     if (command === "$write-ssh-keys") { -%>
+<%       if (ctx.secrets.hasOwnProperty("SSH") || ctx.secrets.hasOwnProperty("SSH_HOST_KEY")) { -%>
                     - mkdir -p -m 700 ~/.ssh
-<%   if (ctx.secrets.hasOwnProperty("SSH")) { -%>
+<%         if (ctx.secrets.hasOwnProperty("SSH")) { -%>
                     - echo "${SSH}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-<%   } -%>
-<%   if (ctx.secrets.hasOwnProperty("SSH_HOST_KEY")) { -%>
+<%         } -%>
+<%         if (ctx.secrets.hasOwnProperty("SSH_HOST_KEY")) { -%>
                     - echo "${SSH_HOST_KEY}" > ~/.ssh/known_hosts
+<%         } -%>
+<%       } -%>
+<%     } else if (command === "$import-gpg-keys") { -%>
+<%       if (ctx.secrets.hasOwnProperty("GPG")) { -%>
+                    - echo "${GPG}" | gpg --import
+<%       } -%>
+<%     } else { -%>
+                    - <%- command %>
+<%     } -%>
 <%   } -%>
 <% } -%>
                 loop:
@@ -55,10 +67,12 @@ spec:
                     - yaml-crypt -k "env:YAML_CRYPT_<%- index %>" --recursive --continue --decrypt '<%- path %>'
 <%         } -%>
 <%       } -%>
-<%     } else if (command === "$sops-decrypt" && Object.keys(ctx.config.secrets.sops).length > 0) { -%>
+<%     } else if (command === "$sops-decrypt") { -%>
+<%       if (Object.keys(ctx.config.secrets.sops).length > 0) { -%>
 <%         for (const path of ctx.config.git.path) { -%>
                     - find '<%- path %>' -type f -regex '.*.ya*ml' -print0 | xargs -0 -n 1 -- sops --decrypt --in-place
 <%         } -%>
+<%       } -%>
 <%     } else if (command === "$kubectl-apply") { -%>
 <%       const paths = ctx.config.git.path.map(s => `${ctx.config.kubernetes.kustomize ? "-k" : "-f"} '${s}'`).join(" "); -%>
 <%       if (ctx.config.kubernetes.prune) { -%>
@@ -66,6 +80,8 @@ spec:
 <%       } else { -%>
                     - kubectl apply <%- paths %>
 <%       } -%>
+<%     } else { -%>
+                    - <%- command %>
 <%     } -%>
 <%   } -%>
 <% } else { -%>

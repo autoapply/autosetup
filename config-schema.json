@@ -79,6 +79,10 @@
             "type": "string"
           }
         },
+        "gpg": {
+          "type": "string",
+          "default": ""
+        },
         "others": {
           "type": "object",
           "default": {},
@@ -142,12 +146,19 @@
       "properties": {
         "image": {
           "type": "string",
-          "default": "autoapply/autoapply:0.10.1-kubectl"
+          "default": "autoapply/autoapply:0.11.0-kubectl"
         },
         "sleep": {
           "type": "integer",
           "minimum": 0,
           "default": 30
+        },
+        "init": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["$write-ssh-keys", "$import-gpg-keys"]
         },
         "commands": {
           "type": "array",
