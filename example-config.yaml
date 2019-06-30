@@ -26,6 +26,7 @@ secrets:
   # optional, the GPG keys to import
   gpg: |
     -----BEGIN PGP PRIVATE KEY BLOCK-----
+    
     lQOXBF0XaMUBCADOE9jWQ7PwwT+Dlb6SnRsaff9FkAusFORfpqWSS2DCkxJPZLOK
     dfM5RAqVCLq+O2N...
     -----END PGP PRIVATE KEY BLOCK-----
