@@ -5,46 +5,51 @@ set -e
 NOW=$(date +"%Y%m%d%H%M%S")
 NAMESPACE="demo-${NOW}"
 
+KUBECTL="kubectl-1.14 -n ${NAMESPACE}"
+
 function main() {
     prompt
 
     sleep 1
 
     print "kubectl get all"
-    _kubectl get all
+    ${KUBECTL} get all
     prompt
 
     sleep 2
 
     print "docker run --rm autoapply/autosetup \\"
-    print "       -c deployment.repository=https://github.com/autoapply/autoapply \\"
-    print "       -c deployment.path=docs/examples/nginx.yaml \\"
-    print "       | kubectl apply -f -"
+    print "    -c git.url=https://github.com/autoapply/template-kubectl \\"
+    print "    -c git.path=prod \\"
+    print "    | kubectl apply -f -"
 
-    docker run --rm autoapply/autosetup \
-        -c deployment.repository=https://github.com/autoapply/autoapply \
-        -c deployment.path=docs/examples/nginx.yaml \
-        -c deployment.namespace="${NAMESPACE}" \
-        | _kubectl apply -f - &>/dev/null
+    sleep .5
+
+    echo "info: All templates successfully generated!"
+
+    sleep .5
+
     prompt
 
     sleep .5
 
-    (sleep 15 && killall watch &>/dev/null) &
+    (sleep 2 && docker run --rm autoapply/autosetup \
+        -c git.url=https://github.com/autoapply/template-kubectl \
+        -c git.path=prod \
+        -c kubernetes.namespace="${NAMESPACE}" 2>/dev/null \
+        | ${KUBECTL} apply -f - &>/dev/null) &
+
+    (sleep 20 && killall watch &>/dev/null) &
 
     print "watch kubectl get all"
     sleep .5
-    watch -t -n .2 kubectl -n "${NAMESPACE}" get all
+    watch -t -n .2 ${KUBECTL} get all
 
     clear
     sleep 3
     echo
 
-    kubectl delete --wait=false ns "${NAMESPACE}" &>/dev/null
-}
-
-function _kubectl() {
-    kubectl -n "${NAMESPACE}" $@
+    ${KUBECTL} delete --wait=false ns "${NAMESPACE}" &>/dev/null
 }
 
 function prompt() {

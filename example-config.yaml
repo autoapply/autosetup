@@ -30,6 +30,7 @@ secrets:
     lQOXBF0XaMUBCADOE9jWQ7PwwT+Dlb6SnRsaff9FkAusFORfpqWSS2DCkxJPZLOK
     dfM5RAqVCLq+O2N...
     -----END PGP PRIVATE KEY BLOCK-----
+  # values added here will be available as environment variables
   others:
     SOME_OTHER_SECRET: "secret123"
 kubernetes:

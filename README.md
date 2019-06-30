@@ -12,20 +12,24 @@ Quickly set up [autoapply](https://github.com/autoapply/autoapply) in a Kubernet
 
 ## Usage
 
-Install it using `yarn global add autosetup` or `npm install -g autosetup`.
-Alternatively, you can also use the Docker image `autoapply/autosetup`.
+Run autosetup by using the Docker image `autoapply/autosetup`.
 
 ```bash
-$ autosetup \
+$ docker run --rm autoapply/autosetup \
     -c git.url=https://github.com/autoapply/template-kubectl \
     -c 'git.path=["common","dev"]' \
-    -o output.yaml
-info: File has been written successfully: output.yaml
+    -c kubernetes.namespace=autoapply-test \
+    > output.yaml
+info: All templates successfully generated!
 $ cat output.yaml
 $ kubectl apply -f output.yaml
 ```
 
-<img src="https://autoapply.github.io/autosetup/demo.svg" width="600">
+Alternatively, you can also install it locally using `yarn global add autosetup` or `npm install -g autosetup`.
+
+<p align="center">
+  <img  width="800" src="https://autoapply.github.io/autosetup/demo.svg">
+</p>
 
 ## Configuration
 
@@ -40,6 +44,8 @@ git:
 ```
 
 For more details, see [example-config.yaml](example-config.yaml).
+
+See [template-kubectl](https://github.com/autoapply/template-kubectl) and [template-kustomize](https://github.com/autoapply/template-kustomize) for example repositories.
 
 ### SSH key
 
