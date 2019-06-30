@@ -20,7 +20,7 @@ function main() {
 
     print "docker run --rm autoapply/autosetup \\"
     print "    -c git.url=https://github.com/autoapply/template-kubectl \\"
-    print "    -c git.path=prod \\"
+    print "    -c kubernetes.paths=prod \\"
     print "    | kubectl apply -f -"
 
     sleep .5
@@ -35,7 +35,7 @@ function main() {
 
     (sleep 2 && docker run --rm autoapply/autosetup \
         -c git.url=https://github.com/autoapply/template-kubectl \
-        -c git.path=prod \
+        -c kubernetes.paths=prod \
         -c kubernetes.namespace="${NAMESPACE}" 2>/dev/null \
         | ${KUBECTL} apply -f - &>/dev/null) &
 

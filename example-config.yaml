@@ -1,12 +1,9 @@
 git:
   # required, the git repository from where to download Kubernetes object files
   url: "git@github.com:autoapply/template-kubectl.git"
-  # optional, the path within the repository
-  path:
-    - "."
 secrets:
   # optional, the SSH key used to access the repository, can be generated
-  # using "ssh-keygen" (please check the correct indentation here!)
+  # using "ssh-keygen" (make sure to check the correct indentation here!)
   ssh: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIJKQIBAAKCAgEA0tI0gtK7uc60kiQ1RcVAcg2r896uXZR5qWAPZbC53g5iwqwb
@@ -24,9 +21,10 @@ secrets:
   sops:
     SOPS_PGP_FP: "28A4E3742FF30047277C32E266C52CA05F3FB2E4"
   # optional, the GPG keys to import
+  # (make sure to check the correct indentation here!)
   gpg: |
     -----BEGIN PGP PRIVATE KEY BLOCK-----
-    
+
     lQOXBF0XaMUBCADOE9jWQ7PwwT+Dlb6SnRsaff9FkAusFORfpqWSS2DCkxJPZLOK
     dfM5RAqVCLq+O2N...
     -----END PGP PRIVATE KEY BLOCK-----
@@ -36,6 +34,10 @@ secrets:
 kubernetes:
   # optional, the namespace where the autoapply objects will be created
   namespace: "autoapply"
+  # optional, the paths within the repository to apply
+  paths:
+    - "common"
+    - "dev"
   # optional, whether to run "kubectl kustomize", see
   # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
   kustomize: false

@@ -17,7 +17,7 @@ Run autosetup by using the Docker image `autoapply/autosetup`.
 ```bash
 $ docker run --rm autoapply/autosetup \
     -c git.url=https://github.com/autoapply/template-kubectl \
-    -c 'git.path=["common","dev"]' \
+    -c 'kubernetes.paths=["common","dev"]' \
     -c kubernetes.namespace=autoapply-test \
     > output.yaml
 info: All templates successfully generated!
@@ -38,7 +38,8 @@ A simple configuration file looks like this:
 ```yaml
 git:
   url: "https://github.com/autoapply/template-kubectl"
-  path:
+kubernetes:
+  paths:
     - "common"
     - "dev"
 ```

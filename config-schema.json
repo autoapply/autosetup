@@ -11,14 +11,6 @@
         "url": {
           "type": "string"
         },
-        "path": {
-          "type": "array",
-          "minItems": 1,
-          "default": ["."],
-          "items": {
-            "type": "string"
-          }
-        },
         "args": {
           "type": "string",
           "default": "--depth 1 --single-branch"
@@ -92,6 +84,14 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "default": ["."],
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -103,6 +103,18 @@
         "namespace": {
           "type": "string",
           "default": "default"
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "default": ["."],
+          "items": {
+            "type": "string"
+          }
+        },
+        "recursive": {
+          "type": "boolean",
+          "default": false
         },
         "kustomize": {
           "type": "boolean",
