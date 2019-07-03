@@ -30,6 +30,15 @@ describe("autosetup", () => {
     }, "expected-output-simple.yaml");
   });
 
+  it("should create expected output (branch)", async () => {
+    await checkOutput(config => {
+      config.git.url = "git@github.com:autoapply/template-kubectl.git";
+      config.git.branch = "some/branch";
+      config.kubernetes.namespace = "test-branch";
+      config.kubernetes.paths = ["a", "b"];
+    }, "expected-output-branch.yaml");
+  });
+
   it("should create expected output (kustomize)", async () => {
     await checkOutput(config => {
       config.git.url = "https://github.com/autoapply/template-kubectl";

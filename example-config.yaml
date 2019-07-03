@@ -1,6 +1,8 @@
 git:
   # required, the git repository from where to download Kubernetes object files
   url: "git@github.com:autoapply/template-kubectl.git"
+  # optional, the branch to checkout after cloning (instead of default branch)
+  branch: "master"
 secrets:
   # optional, the SSH key used to access the repository, can be generated
   # using "ssh-keygen" (make sure to check the correct indentation here!)

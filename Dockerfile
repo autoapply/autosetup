@@ -1,5 +1,7 @@
 FROM node:alpine
 
+RUN apk add --no-cache openssh-client
+
 COPY . /tmp/src/
 
 RUN yarn global add "file:/tmp/src" \

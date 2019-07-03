@@ -11,6 +11,10 @@
         "url": {
           "type": "string"
         },
+        "branch": {
+          "type": "string",
+          "default": ""
+        },
         "args": {
           "type": "string",
           "default": "--depth 1 --single-branch"
