@@ -49,4 +49,12 @@ describe("autosetup", () => {
       config.kubernetes.paths = ["dev"];
     }, "expected-output-kustomize.yaml");
   });
+
+  it("should create expected output (multiple)", async () => {
+    await checkOutput(config => {
+      config.git.url = "https://github.com/autoapply/template-kubectl";
+      config.kubernetes.kustomize = true;
+      config.kubernetes.paths = ["common", "dev"];
+    }, "expected-output-multiple.yaml");
+  });
 });
