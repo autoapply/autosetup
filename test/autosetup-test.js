@@ -57,4 +57,30 @@ describe("autosetup", () => {
       config.kubernetes.paths = ["common", "dev"];
     }, "expected-output-multiple.yaml");
   });
+
+  it("should create expected output (config string)", async () => {
+    await checkOutput(config => {
+      config.autoapply.config = JSON.stringify(
+        {
+          loop: {
+            commands: ["date", "ls"]
+          },
+          server: { enabled: true }
+        },
+        null,
+        "  "
+      );
+    }, "expected-output-config.yaml");
+  });
+
+  it("should create expected output (config object)", async () => {
+    await checkOutput(config => {
+      config.autoapply.config = {
+        loop: {
+          commands: ["date", "ls"]
+        },
+        server: { enabled: true }
+      };
+    }, "expected-output-config.yaml");
+  });
 });

@@ -31,22 +31,26 @@ spec:
           env:
             - name: AUTOAPPLY_CONFIG
               value: |
-<% if (ctx.autoapply.init.length > 0) { -%>
+<% if (ctx.autoapply.config) { -%>
+<%-  ctx.autoapply.config.replace(/^/gm, " ".repeat(16)) %>
+<% } else { -%>
+<%   if (ctx.autoapply.init.length > 0) { -%>
                 init:
                   commands:
-<%   for (const command of ctx.autoapply.init) { -%>
+<%     for (const command of ctx.autoapply.init) { -%>
                     - <%- command %>
+<%     } -%>
 <%   } -%>
-<% } -%>
                 loop:
                   sleep: <%- ctx.config.autoapply.sleep %>
-<% if (ctx.autoapply.commands.length > 0) { -%>
+<%   if (ctx.autoapply.commands.length > 0) { -%>
                   commands:
-<%   for (const command of ctx.autoapply.commands) { -%>
+<%     for (const command of ctx.autoapply.commands) { -%>
                     - <%- command %>
-<%   } -%>
-<% } else { -%>
+<%     } -%>
+<%   } else { -%>
                   commands: []
+<%   } -%>
 <% } -%>
 <% if (ctx.config.kubernetes.tolerations) { -%>
       tolerations:

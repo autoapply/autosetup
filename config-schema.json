@@ -169,6 +169,9 @@
           "minimum": 0,
           "default": 30
         },
+        "config": {
+          "anyOf": [{ "type": "string" }, { "type": "object" }]
+        },
         "init": {
           "type": "array",
           "items": {
