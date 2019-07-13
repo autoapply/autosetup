@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "%NAMESPACE%"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: git
+  namespace: "%NAMESPACE%"
+  labels:
+    app: git
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git
+  template:
+    metadata:
+      labels:
+        app: git
+    spec:
+      containers:
+        - name: git
+          image: pascalgn/git-server-docker:latest
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: git
+  namespace: "%NAMESPACE%"
+  labels:
+    app: git
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+  selector:
+    app: git
