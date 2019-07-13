@@ -83,4 +83,12 @@ describe("autosetup", () => {
       };
     }, "expected-output-config.yaml");
   });
+
+  it("should create expected output (namespaces)", async () => {
+    await checkOutput(config => {
+      config.git.url = "http://localhost:8080/repository.git";
+      config.kubernetes.prune = false;
+      config.kubernetes["namespace-access"] = ["test1", "test2"];
+    }, "expected-output-namespaces.yaml");
+  });
 });

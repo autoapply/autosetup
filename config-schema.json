@@ -108,6 +108,12 @@
           "type": "string",
           "default": "default"
         },
+        "namespace-access": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "paths": {
           "type": "array",
           "minItems": 1,

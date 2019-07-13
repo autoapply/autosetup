@@ -1,6 +1,9 @@
-<% if (ctx.config.kubernetes.namespace !== "default") { -%>
+<% for (const namespace of ctx.allNamespaces) { -%>
+<%   if (namespace !== "default") { -%>
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: '<%- ctx.config.kubernetes.namespace %>'
+  name: '<%- namespace %>'
+---
+<%   } -%>
 <% } -%>

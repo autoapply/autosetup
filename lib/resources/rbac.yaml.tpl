@@ -9,12 +9,13 @@ metadata:
 imagePullSecrets:
   - name: autoapply-dockercfg
 <% } -%>
+<% for (const namespace of ctx.accessNamespaces) { -%>
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: autoapply
-  namespace: '<%- ctx.config.kubernetes.namespace %>'
+  namespace: '<%- namespace %>'
   labels:
     component: autoapply
 rules:
@@ -26,7 +27,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: autoapply
-  namespace: '<%- ctx.config.kubernetes.namespace %>'
+  namespace: '<%- namespace %>'
   labels:
     component: autoapply
 roleRef:
@@ -36,3 +37,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: autoapply
+<%   if (ctx.config.kubernetes.namespace !== namespace) { -%>
+  namespace: '<%- ctx.config.kubernetes.namespace %>'
+<%   } -%>
+<% } -%>
