@@ -50,7 +50,7 @@ See [template-kubectl](https://github.com/autoapply/template-kubectl) and [templ
 
 ### SSH key
 
-The SSH key to access git repositories can be generated using
+The SSH key to access Git repositories can be generated using
 
 ```bash
 $ ssh-keygen -N '' -m PEM -b 4096 -t rsa -f id_rsa -C autoapply

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -113,6 +113,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "cluster-admin": {
+          "type": "boolean",
+          "default": false
         },
         "paths": {
           "type": "array",

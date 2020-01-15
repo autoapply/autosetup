@@ -70,7 +70,7 @@ spec:
                   sleep: 30
                   commands:
                     - git clone -b 'some/branch' --depth 1 --single-branch 'git@github.com:autoapply/template-kubectl.git' '.'
-                    - kubectl apply --prune -l 'component!=autoapply' --prune-whitelist 'core/v1/ConfigMap' --prune-whitelist 'core/v1/Endpoints' --prune-whitelist 'core/v1/PersistentVolumeClaim' --prune-whitelist 'core/v1/Pod' --prune-whitelist 'core/v1/ReplicationController' --prune-whitelist 'core/v1/Secret' --prune-whitelist 'core/v1/Service' --prune-whitelist 'batch/v1/Job' --prune-whitelist 'batch/v1beta1/CronJob' --prune-whitelist 'extensions/v1beta1/DaemonSet' --prune-whitelist 'extensions/v1beta1/Deployment' --prune-whitelist 'extensions/v1beta1/Ingress' --prune-whitelist 'extensions/v1beta1/ReplicaSet' --prune-whitelist 'apps/v1beta1/StatefulSet' --prune-whitelist 'apps/v1beta1/Deployment' -f 'a' -f 'b'
+                    - kubectl apply --prune -l 'provider!=kubernetes,component!=autoapply' --prune-whitelist 'core/v1/ConfigMap' --prune-whitelist 'core/v1/Endpoints' --prune-whitelist 'core/v1/PersistentVolumeClaim' --prune-whitelist 'core/v1/Pod' --prune-whitelist 'core/v1/ReplicationController' --prune-whitelist 'core/v1/Secret' --prune-whitelist 'core/v1/Service' --prune-whitelist 'batch/v1/Job' --prune-whitelist 'batch/v1beta1/CronJob' --prune-whitelist 'extensions/v1beta1/DaemonSet' --prune-whitelist 'extensions/v1beta1/Deployment' --prune-whitelist 'extensions/v1beta1/Ingress' --prune-whitelist 'extensions/v1beta1/ReplicaSet' --prune-whitelist 'apps/v1beta1/StatefulSet' --prune-whitelist 'apps/v1beta1/Deployment' -f 'a' -f 'b'
       tolerations:
         - effect: NoExecute
           operator: Exists

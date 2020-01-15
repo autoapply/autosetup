@@ -91,4 +91,11 @@ describe("autosetup", () => {
       config.kubernetes["namespace-access"] = ["test1", "test2"];
     }, "expected-output-namespaces.yaml");
   });
+
+  it("should create expected output (admin)", async () => {
+    await checkOutput(config => {
+      config.git.url = "https://github.com/autoapply/template-kubectl";
+      config.kubernetes["cluster-admin"] = true;
+    }, "expected-output-admin.yaml");
+  });
 });

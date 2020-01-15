@@ -1,5 +1,5 @@
 git:
-  # required, the git repository from where to download Kubernetes object files
+  # required, the Git repository from where to download Kubernetes object files
   url: "git@github.com:autoapply/template-kubectl.git"
   # optional, the branch to checkout after cloning (instead of default branch)
   branch: "master"
@@ -36,6 +36,12 @@ secrets:
 kubernetes:
   # optional, the namespace where the autoapply objects will be created
   namespace: "autoapply"
+  # optional, the namespaces the autoapply service account will have access to
+  namespace-access:
+    - "autoapply"
+  # optional, whether to give autoapply full access to the cluster
+  # when "true", the "cluster-admin" role will be assigned to autoapply
+  cluster-admin: false
   # optional, the paths within the repository to apply
   paths:
     - "common"

@@ -9,7 +9,24 @@ metadata:
 imagePullSecrets:
   - name: autoapply-dockercfg
 <% } -%>
-<% for (const namespace of ctx.accessNamespaces) { -%>
+<% if (ctx.config.kubernetes['cluster-admin']) { -%>
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: autoapply
+  labels:
+    component: autoapply
+subjects:
+- kind: ServiceAccount
+  name: autoapply
+  namespace: '<%- ctx.config.kubernetes.namespace %>'
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+<% } else { -%>
+<%   for (const namespace of ctx.accessNamespaces) { -%>
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -37,7 +54,8 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: autoapply
-<%   if (ctx.config.kubernetes.namespace !== namespace) { -%>
+<%     if (ctx.config.kubernetes.namespace !== namespace) { -%>
   namespace: '<%- ctx.config.kubernetes.namespace %>'
+<%     } -%>
 <%   } -%>
 <% } -%>
