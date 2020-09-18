@@ -19,32 +19,36 @@ const { prepare, generate } = require("../lib/autosetup");
 async function main() {
   const parser = new ArgumentParser({
     prog: module.exports.name,
-    version: module.exports.version,
-    addHelp: true,
+    add_help: true,
     description: module.exports.description
   });
 
-  parser.addArgument(["-d", "--debug"], {
-    action: "storeTrue",
-    help: "Show debugging output"
+  parser.add_argument("-v", "--version", {
+    action: "version",
+    version: module.exports.version,
+    help: "Show version number and exit"
   });
-  parser.addArgument(["-c"], {
+  parser.add_argument("-d", "--debug", {
+    action: "store_true",
+    help: "show debugging output"
+  });
+  parser.add_argument("-c", {
     metavar: "<name>=<value>",
     action: "append",
-    help: "Set configuration values"
+    help: "set configuration values"
   });
-  parser.addArgument(["-o"], {
+  parser.add_argument("-o", {
     metavar: "<output>",
-    defaultValue: "-",
-    help: "Output file to write"
+    default: "-",
+    help: "output file to write"
   });
-  parser.addArgument(["config"], {
+  parser.add_argument("config", {
     metavar: "<configuration>",
     nargs: "?",
-    help: "Configuration file to use"
+    help: "configuration file to use"
   });
 
-  const args = parser.parseArgs();
+  const args = parser.parse_args();
   if (args.debug && logger.level === "info") {
     logger.level = "debug";
   }

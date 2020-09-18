@@ -33,8 +33,9 @@ setup_git_server() {
 }
 
 waitfor() {
-    for t in $(seq 1 30); do
-        if [ "$t" -eq 30 ]; then
+    timeout=30
+    for t in $(seq 1 $timeout); do
+        if [ "$t" -eq "$timeout" ]; then
             echo "Timeout!" >&2
             return 1
         elif eval "${@}"; then
@@ -56,6 +57,13 @@ tmpname() {
     echo "it-$(date +%Y%m%d%H%M%S)"
 }
 
+show_log_output() {
+    namespaces=$(kubectl_local get namespace -o name | sed -En 's,.+/(it-.+-autoapply),\1,p')
+    for namespace in $namespaces; do
+        kubectl_local --namespace "$namespace" logs deploy/autoapply
+    done
+}
+
 CFR="\033[31m"
 CFG="\033[32m"
 CFB="\033[34m"
@@ -68,6 +76,7 @@ run_test() {
     if "${@}"; then
         RESULT=0
     else
+        show_log_output
         RESULT=1
     fi
     delete_namespaces "${@}" || return 1
