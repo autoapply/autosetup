@@ -1,6 +1,6 @@
 {
   "name": "autosetup",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Tool to install autoapply in a Kubernetes cluster",
   "license": "MIT",
   "author": "Pascal",
