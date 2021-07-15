@@ -740,12 +740,12 @@ ejs-include-regex@^1.0.0:
   integrity sha1-4vcVdcv9VRrIALJHTB9io45wCTo=
 
 ejs-lint@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/ejs-lint/-/ejs-lint-1.2.0.tgz#5c98dcc75e0480d0a742e23fbeff5ccc3e700503"
-  integrity sha512-ZvtL5HlHFkHmeYZBm5e+ICdqgze9FKQ1rTAXFDhlPpAjDdaXNlZ9QO1hoVns8PgMKt3TC1/2VApSIc6aEHQk+g==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ejs-lint/-/ejs-lint-1.2.1.tgz#6fa164ed470183f19b1150052f92fd25159a938d"
+  integrity sha512-pHN8kjh8a4HxeG8FKl4+8wgiX/h7fiZK9r56hK2KA9xJ2a+736+4iEfEYw6uHkTy0rXdVGDSQFqpiFqG80TtKg==
   dependencies:
     chalk "^4.0.0"
-    ejs "3.1.5"
+    ejs "3.1.6"
     ejs-include-regex "^1.0.0"
     globby "^11.0.0"
     read-input "^0.3.1"
@@ -753,14 +753,7 @@ ejs-lint@^1.2.0:
     syntax-error "^1.1.6"
     yargs "^16.0.0"
 
-ejs@3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.5.tgz#aed723844dc20acb4b170cd9ab1017e476a0d93b"
-  integrity sha512-dldq3ZfFtgVTJMLjOe+/3sROTzALlL9E34V4/sDtUd/KlBSS0s6U1/+WPE1B4sj9CXHJpL1M6rhNJnc9Wbal9w==
-  dependencies:
-    jake "^10.6.1"
-
-ejs@^3.1.6:
+ejs@3.1.6, ejs@^3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.6.tgz#5bfd0a0689743bb5268b3550cceeebbc1702822a"
   integrity sha512-9lt9Zse4hPucPkoP7FHDF0LQAlGyF9JVpnClFLFH3aSSbxmyoqINRpp/9wePWJTUl4KOQwRL72Iw3InHPDkoGw==
