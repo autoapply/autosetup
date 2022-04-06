@@ -12,7 +12,7 @@ ROOT="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)"
 
 INPUT_FILE="${ROOT}/../resources/git-server.yaml"
 
-KUBECTL="kubectl --context=docker-for-desktop"
+KUBECTL="kubectl --context=docker-desktop"
 
 sed "s/%NAMESPACE%/${NAMESPACE}/g" "${INPUT_FILE}" |
     ${KUBECTL} apply -f - >&2 || exit 1

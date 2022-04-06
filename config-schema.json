@@ -150,9 +150,8 @@
             "core/v1/Secret",
             "core/v1/Service",
             "batch/v1/Job",
-            "batch/v1beta1/CronJob",
-            "extensions/v1beta1/Ingress",
-            "networking.k8s.io/v1beta1/Ingress",
+            "batch/v1/CronJob",
+            "networking.k8s.io/v1/Ingress",
             "apps/v1/DaemonSet",
             "apps/v1/ReplicaSet",
             "apps/v1/StatefulSet",
@@ -172,7 +171,7 @@
       "properties": {
         "image": {
           "type": "string",
-          "default": "autoapply/autoapply:0.16.1-kubectl"
+          "default": "autoapply/autoapply:0.18.0-kubectl"
         },
         "sleep": {
           "type": "integer",

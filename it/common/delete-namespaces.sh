@@ -1,6 +1,6 @@
 #!/bin/sh
 
-KUBECTL_ARGS="--context=docker-for-desktop"
+KUBECTL_ARGS="--context=docker-desktop"
 
 kubectl "${KUBECTL_ARGS}" get namespace \
     --field-selector='status.phase=Active' -o name |

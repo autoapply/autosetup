@@ -6,7 +6,7 @@ if [ ! -d "${ROOT}" ] || [ ! -d "${ROOT}/../.git" ]; then
 fi
 
 kubectl_local() {
-    kubectl --context=docker-for-desktop "${@}"
+    kubectl --context=docker-desktop "${@}"
 }
 
 autosetup_local() {
