@@ -1,10 +1,10 @@
 .*
 !.babelrc
+!.circleci
 !.dockerignore
 !.eslintrc.json
 !.flowconfig
 !.gitignore
-!.travis.yml
 
 node_modules/
 package-lock.json
