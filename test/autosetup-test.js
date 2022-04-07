@@ -21,6 +21,10 @@ async function checkOutput(callback, outputFile) {
 }
 
 describe("autosetup", () => {
+  it("should read the config file", async () => {
+    await readConfig(resolve(__dirname, "../example-config.yaml"));
+  });
+
   it("should create expected output (simple)", async () => {
     await checkOutput(config => {
       config.git.url = "https://github.com/autoapply/template-kubectl";

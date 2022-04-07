@@ -39,5 +39,9 @@
     "eslint": "^8.12.0",
     "mocha": "^9.2.2",
     "svg-term-cli": "^2.1.1"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "trailingComma": "none"
   }
 }
