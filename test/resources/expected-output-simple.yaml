@@ -88,7 +88,7 @@ spec:
                   commands:
                     - git clone --depth 1 --single-branch 'https://github.com/autoapply/template-kubectl' '.'
                     - find '.' -type f -regex '.*.ya*ml' -exec sops --decrypt --in-place '{}' \;
-                    - kubectl apply -R --prune -l 'provider!=kubernetes,component!=autoapply' --prune-whitelist 'core/v1/ConfigMap' --prune-whitelist 'core/v1/Endpoints' --prune-whitelist 'core/v1/PersistentVolumeClaim' --prune-whitelist 'core/v1/Pod' --prune-whitelist 'core/v1/ReplicationController' --prune-whitelist 'core/v1/Secret' --prune-whitelist 'core/v1/Service' --prune-whitelist 'batch/v1/Job' --prune-whitelist 'batch/v1/CronJob' --prune-whitelist 'networking.k8s.io/v1/Ingress' --prune-whitelist 'apps/v1/DaemonSet' --prune-whitelist 'apps/v1/ReplicaSet' --prune-whitelist 'apps/v1/StatefulSet' --prune-whitelist 'apps/v1/Deployment' -f '.'
+                    - kubectl apply -R --prune -l 'provider!=kubernetes,component!=autoapply' --prune-allowlist 'core/v1/ConfigMap' --prune-allowlist 'core/v1/Endpoints' --prune-allowlist 'core/v1/PersistentVolumeClaim' --prune-allowlist 'core/v1/Pod' --prune-allowlist 'core/v1/ReplicationController' --prune-allowlist 'core/v1/Secret' --prune-allowlist 'core/v1/Service' --prune-allowlist 'batch/v1/Job' --prune-allowlist 'batch/v1/CronJob' --prune-allowlist 'networking.k8s.io/v1/Ingress' --prune-allowlist 'apps/v1/DaemonSet' --prune-allowlist 'apps/v1/ReplicaSet' --prune-allowlist 'apps/v1/StatefulSet' --prune-allowlist 'apps/v1/Deployment' -f '.'
           resources:
             requests:
               memory: 128Mi
