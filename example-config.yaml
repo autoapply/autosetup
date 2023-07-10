@@ -39,6 +39,10 @@ kubernetes:
   # optional, the namespaces the autoapply service account will have access to
   namespace-access:
     - "autoapply"
+  # optional, but recommended, kubernetes resource limits
+  resources:
+    memory: 128Mi
+    cpu: 15m
   # optional, whether to give autoapply full access to the cluster
   # when "true", the "cluster-admin" role will be assigned to autoapply
   cluster-admin: false

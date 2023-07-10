@@ -72,7 +72,7 @@ spec:
       serviceAccountName: autoapply
       containers:
         - name: autoapply
-          image: 'autoapply/autoapply:0.18.0-kubectl'
+          image: 'autoapply/autoapply:0.19.2-kubectl'
           args: ['env:AUTOAPPLY_CONFIG']
           envFrom:
             - secretRef:
@@ -89,6 +89,13 @@ spec:
                     - git clone --depth 1 --single-branch 'https://github.com/autoapply/template-kubectl' '.'
                     - find '.' -type f -regex '.*.ya*ml' -exec sops --decrypt --in-place '{}' \;
                     - kubectl apply -R --prune -l 'provider!=kubernetes,component!=autoapply' --prune-whitelist 'core/v1/ConfigMap' --prune-whitelist 'core/v1/Endpoints' --prune-whitelist 'core/v1/PersistentVolumeClaim' --prune-whitelist 'core/v1/Pod' --prune-whitelist 'core/v1/ReplicationController' --prune-whitelist 'core/v1/Secret' --prune-whitelist 'core/v1/Service' --prune-whitelist 'batch/v1/Job' --prune-whitelist 'batch/v1/CronJob' --prune-whitelist 'networking.k8s.io/v1/Ingress' --prune-whitelist 'apps/v1/DaemonSet' --prune-whitelist 'apps/v1/ReplicaSet' --prune-whitelist 'apps/v1/StatefulSet' --prune-whitelist 'apps/v1/Deployment' -f '.'
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 15m
+            limits:
+              memory: 128Mi
+              cpu: 15m
       tolerations:
         - effect: NoExecute
           operator: Exists

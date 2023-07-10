@@ -108,6 +108,21 @@
           "type": "string",
           "default": "default"
         },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "memory": {
+              "type": "string",
+              "default": ""
+            },
+            "cpu": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          "default": {}
+        },
         "namespace-access": {
           "type": "array",
           "items": {
@@ -171,7 +186,7 @@
       "properties": {
         "image": {
           "type": "string",
-          "default": "autoapply/autoapply:0.18.0-kubectl"
+          "default": "autoapply/autoapply:0.19.2-kubectl"
         },
         "sleep": {
           "type": "integer",

@@ -56,6 +56,23 @@ spec:
                   commands: []
 <%   } -%>
 <% } -%>
+<% if (ctx.config.kubernetes.resources.memory || ctx.config.kubernetes.resources.cpu) { -%>
+          resources:
+            requests:
+<% if (ctx.config.kubernetes.resources.memory) { -%>
+              memory: <%- ctx.config.kubernetes.resources.memory %>
+<% } -%>
+<% if (ctx.config.kubernetes.resources.cpu) { -%>
+              cpu: <%- ctx.config.kubernetes.resources.cpu %>
+<% } -%>
+            limits:
+<% if (ctx.config.kubernetes.resources.memory) { -%>
+              memory: <%- ctx.config.kubernetes.resources.memory %>
+<% } -%>
+<% if (ctx.config.kubernetes.resources.cpu) { -%>
+              cpu: <%- ctx.config.kubernetes.resources.cpu %>
+<% } -%>
+<% } -%>
 <% if (ctx.config.kubernetes.tolerations) { -%>
       tolerations:
         - effect: NoExecute

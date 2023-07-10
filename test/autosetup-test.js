@@ -31,6 +31,7 @@ describe("autosetup", () => {
       config.secrets.gpg = "123";
       config.secrets.sops = { TEST: "123" };
       config.kubernetes.recursive = true;
+      config.kubernetes.resources = { memory: "128Mi", cpu: "15m" };
     }, "expected-output-simple.yaml");
   });
 
