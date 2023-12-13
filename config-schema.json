@@ -196,7 +196,7 @@
       "properties": {
         "image": {
           "type": "string",
-          "default": "autoapply/autoapply:0.19.3-kubectl"
+          "default": "autoapply/autoapply:0.20.0-kubectl"
         },
         "sleep": {
           "type": "integer",
