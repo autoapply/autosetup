@@ -65,7 +65,7 @@ spec:
       serviceAccountName: autoapply
       containers:
         - name: autoapply
-          image: 'autoapply/autoapply:0.20.0-kubectl'
+          image: 'autoapply/autoapply:0.21.0-kubectl'
           args: ['env:AUTOAPPLY_CONFIG']
           env:
             - name: AUTOAPPLY_CONFIG
