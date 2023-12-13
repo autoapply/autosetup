@@ -65,6 +65,10 @@ describe("autosetup", () => {
 
   it("should create expected output (config string)", async () => {
     await checkOutput(config => {
+      config.kubernetes.labels = {
+        ["label-1"]: "label 1 value",
+        ["label-2"]: "label 2 value"
+      };
       config.autoapply.config = JSON.stringify(
         {
           loop: {
@@ -80,6 +84,10 @@ describe("autosetup", () => {
 
   it("should create expected output (config object)", async () => {
     await checkOutput(config => {
+      config.kubernetes.labels = {
+        ["label-1"]: "label 1 value",
+        ["label-2"]: "label 2 value"
+      };
       config.autoapply.config = {
         loop: {
           commands: ["date", "ls"]

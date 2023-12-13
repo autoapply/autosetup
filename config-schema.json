@@ -104,6 +104,16 @@
       "additionalProperties": false,
       "default": {},
       "properties": {
+        "labels": {
+          "type": "object",
+          "default": {},
+          "propertyNames": {
+            "pattern": "^[A-Za-z0-9-]+$"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "namespace": {
           "type": "string",
           "default": "default"

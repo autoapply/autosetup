@@ -5,6 +5,9 @@ metadata:
   namespace: '<%- ctx.config.kubernetes.namespace %>'
   labels:
     component: autoapply
+<% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
+    <%- name %>: '<%- value %>'
+<% } -%>
 spec:
   strategy:
     type: Recreate

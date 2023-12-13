@@ -5,6 +5,9 @@ metadata:
   namespace: '<%- ctx.config.kubernetes.namespace %>'
   labels:
     component: autoapply
+<% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
+    <%- name %>: '<%- value %>'
+<% } -%>
 <% if (ctx.dockercfg) { -%>
 imagePullSecrets:
   - name: autoapply-dockercfg
@@ -17,6 +20,9 @@ metadata:
   name: autoapply
   labels:
     component: autoapply
+<% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
+    <%- name %>: '<%- value %>'
+<% } -%>
 subjects:
 - kind: ServiceAccount
   name: autoapply
@@ -35,6 +41,9 @@ metadata:
   namespace: '<%- namespace %>'
   labels:
     component: autoapply
+<% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
+    <%- name %>: '<%- value %>'
+<% } -%>
 rules:
 - apiGroups: ['*']
   resources: ['*']
@@ -47,6 +56,9 @@ metadata:
   namespace: '<%- namespace %>'
   labels:
     component: autoapply
+<% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
+    <%- name %>: '<%- value %>'
+<% } -%>
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
