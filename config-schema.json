@@ -108,7 +108,18 @@
           "type": "object",
           "default": {},
           "propertyNames": {
-            "pattern": "^[A-Za-z0-9-]+$"
+            "pattern": "^([a-z0-9-]+/)?[a-zA-Z0-9_.-]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_.-]+$"
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "default": {},
+          "propertyNames": {
+            "pattern": "^([a-z0-9-]+/)?[a-zA-Z0-9_.-]+$"
           },
           "additionalProperties": {
             "type": "string"

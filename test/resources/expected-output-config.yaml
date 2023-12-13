@@ -5,8 +5,11 @@ metadata:
   namespace: 'default'
   labels:
     component: autoapply
-    label-1: 'label 1 value'
-    label-2: 'label 2 value'
+    label-1: 'value-1'
+    label-2: 'value-2'
+  annotations:
+    annotation-1: 'annotation 1 value'
+    annotation-2: 'annotation 2 value'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -15,8 +18,11 @@ metadata:
   namespace: 'default'
   labels:
     component: autoapply
-    label-1: 'label 1 value'
-    label-2: 'label 2 value'
+    label-1: 'value-1'
+    label-2: 'value-2'
+  annotations:
+    annotation-1: 'annotation 1 value'
+    annotation-2: 'annotation 2 value'
 rules:
 - apiGroups: ['*']
   resources: ['*']
@@ -29,8 +35,11 @@ metadata:
   namespace: 'default'
   labels:
     component: autoapply
-    label-1: 'label 1 value'
-    label-2: 'label 2 value'
+    label-1: 'value-1'
+    label-2: 'value-2'
+  annotations:
+    annotation-1: 'annotation 1 value'
+    annotation-2: 'annotation 2 value'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -46,8 +55,11 @@ metadata:
   namespace: 'default'
   labels:
     component: autoapply
-    label-1: 'label 1 value'
-    label-2: 'label 2 value'
+    label-1: 'value-1'
+    label-2: 'value-2'
+  annotations:
+    annotation-1: 'annotation 1 value'
+    annotation-2: 'annotation 2 value'
 spec:
   strategy:
     type: Recreate

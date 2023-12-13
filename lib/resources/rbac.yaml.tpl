@@ -8,6 +8,12 @@ metadata:
 <% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
     <%- name %>: '<%- value %>'
 <% } -%>
+<% if (Object.keys(ctx.config.kubernetes.annotations).length > 0) { -%>
+  annotations:
+<%   for (const [name, value] of Object.entries(ctx.config.kubernetes.annotations)) { -%>
+    <%- name %>: '<%- value %>'
+<%   } -%>
+<% } -%>
 <% if (ctx.dockercfg) { -%>
 imagePullSecrets:
   - name: autoapply-dockercfg
@@ -22,6 +28,12 @@ metadata:
     component: autoapply
 <% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
     <%- name %>: '<%- value %>'
+<% } -%>
+<% if (Object.keys(ctx.config.kubernetes.annotations).length > 0) { -%>
+  annotations:
+<%   for (const [name, value] of Object.entries(ctx.config.kubernetes.annotations)) { -%>
+    <%- name %>: '<%- value %>'
+<%   } -%>
 <% } -%>
 subjects:
 - kind: ServiceAccount
@@ -44,6 +56,12 @@ metadata:
 <% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
     <%- name %>: '<%- value %>'
 <% } -%>
+<% if (Object.keys(ctx.config.kubernetes.annotations).length > 0) { -%>
+  annotations:
+<%   for (const [name, value] of Object.entries(ctx.config.kubernetes.annotations)) { -%>
+    <%- name %>: '<%- value %>'
+<%   } -%>
+<% } -%>
 rules:
 - apiGroups: ['*']
   resources: ['*']
@@ -58,6 +76,12 @@ metadata:
     component: autoapply
 <% for (const [name, value] of Object.entries(ctx.config.kubernetes.labels)) { -%>
     <%- name %>: '<%- value %>'
+<% } -%>
+<% if (Object.keys(ctx.config.kubernetes.annotations).length > 0) { -%>
+  annotations:
+<%   for (const [name, value] of Object.entries(ctx.config.kubernetes.annotations)) { -%>
+    <%- name %>: '<%- value %>'
+<%   } -%>
 <% } -%>
 roleRef:
   apiGroup: rbac.authorization.k8s.io

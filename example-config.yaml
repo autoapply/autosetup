@@ -41,7 +41,10 @@ kubernetes:
     - "autoapply"
   # optional, additional labels to add
   labels:
-    label1: "some text"
+    label1: "some-value"
+  # optional, additional annotations to add
+  annotation:
+    annotation1: "some text"
   # optional, but recommended, kubernetes resource limits
   resources:
     memory: 128Mi
