@@ -39,6 +39,9 @@ kubernetes:
   # optional, the namespaces the autoapply service account will have access to
   namespace-access:
     - "autoapply"
+  # optional, additional labels to add
+  labels:
+    label1: "some text"
   # optional, but recommended, kubernetes resource limits
   resources:
     memory: 128Mi
@@ -53,3 +56,8 @@ kubernetes:
   # optional, whether to run "kubectl kustomize", see
   # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
   kustomize: false
+autoapply:
+  # optional, container image to use
+  image: autoapply/autoapply
+  # optional, time to pause between runs
+  sleep: 30
